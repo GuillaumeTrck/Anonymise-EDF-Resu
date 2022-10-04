@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 import sys
-from logs import printLogs 
+from utils import printLogs 
 
 def readEDF(EDFName):
     ErasmeToMneEdf(EDFName)

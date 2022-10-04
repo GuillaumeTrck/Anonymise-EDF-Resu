@@ -2,7 +2,7 @@ import numpy as np
 from pyrsistent import v
 import copy
 from operator import itemgetter, attrgetter
-from logs import printLogs 
+from utils import printLogs 
 
 class Point:
     def __init__(self):
