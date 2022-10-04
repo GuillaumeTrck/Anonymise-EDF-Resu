@@ -98,10 +98,17 @@ def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction p
     os.rename(RawFileName,'RawAnonyme.EDF')
     return
 
-def ChangeAnonymeToName(txt) :     #remettre en param�tre resuAnonyme et RawAnonyme
-    fichier=open("txt","r")
+def ChangeAnonymeToName(FichierTxt,resuAnonyme,RawAnonyme) :     #remettre en param�tre resuAnonyme et RawAnonyme
     
-
-    print(txt)
-    #os.rename(resuAnonyme,'')
-    #os.rename(RawAnonyme,'')
+    mylines = []
+    with open (FichierTxt,'rt') as myfile:
+        for myline in myfile:
+            mylines.append(myline.rstrip('\n'))
+            
+    ls=np.array(mylines)
+    ls=np.char.split(ls)
+    print(ls[0][0])
+    print(ls[0][1])
+    
+    os.rename("resuAnonyme.resu",ls[0][0])
+    os.rename("RawAnonyme.EDF",ls[0][1])
