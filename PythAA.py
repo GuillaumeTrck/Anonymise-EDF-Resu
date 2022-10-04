@@ -5,13 +5,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-from yasa.hypno import hypno_str_to_int_Erasme, hypno_upsample_to_data
+#from yasa.hypno import hypno_str_to_int_Erasme, hypno_upsample_to_data
 from edf import *
 from resu import *
 import sys
 import os
 from datetime import datetime
-from logs import *
+from utils import *
     
 def AA(resuName, EDFName):
     # 1.Reading header
@@ -125,7 +125,7 @@ def AA(resuName, EDFName):
     saveResu(resu, resuName)
     return
 
-bInit = checkArguments()
-if bInit :
-    initLogs()
-    AA(sys.argv[2], sys.argv[1])
+args = parseArguments()
+initLogs(args.logs)
+if (args.stages):
+    AA(args.edf, args.resu)
