@@ -6,7 +6,7 @@ import pandas as pd
 import sys
 import os
 
-
+#coucou
 def AnonymiseEDF(EDFName):                                  #fonction permettant d'anonymiser les données du patient du fichier EDF
     EDF = open(EDFName, "rb")                               #r = read, + signifie écrire dedans et b en bit
     EDF.read(8)
