@@ -2,7 +2,7 @@ from os import read
 import mne
 import numpy as np
 import matplotlib.pyplot as plt
-from Anonym import *
+from Anonym import ChangeAnonymeToName
 
 def readEDF(EDFName):               #fonction permettant de lire les fichier EDF, le fichier doit se trouver dans le dossier du programme 
     ErasmeToMneEdf(EDFName)
@@ -17,11 +17,11 @@ def readEDF(EDFName):               #fonction permettant de lire les fichier EDF
                   
     print('Chan =', raw.ch_names)
     #raw.plot(start=30, duration=10,scalings=dict(eeg=1e-4,resp=1e3,eog=1e-4,emg=1e-7,misc=1e-1))
-    raw.plot(duration=30, start=10, n_channels=1, block=True,title='test') #affiche le graph des différents capteurs
+    raw.plot(duration=30, start=10, n_channels=1, block=True,title='test') #affiche le graph des diffï¿½rents capteurs
     MneToErasmeEdf(EDFName)
     return raw
-def ErasmeToMneEdf(EDFName):        #fonction permettant de changer dans le format des caractère par des points : format historique de erasme
-    fid = open(EDFName, "r+")       #r pour (lecture) et + pour écrire dedans 
+def ErasmeToMneEdf(EDFName):        #fonction permettant de changer dans le format des caractï¿½re par des points : format historique de erasme
+    fid = open(EDFName, "r+")       #r pour (lecture) et + pour ï¿½crire dedans 
     fid.seek(170)                   #seek = chercher 
     fid.write(".")
     fid.seek(173)
@@ -32,7 +32,7 @@ def ErasmeToMneEdf(EDFName):        #fonction permettant de changer dans le form
     fid.write(".")
     fid.close()
     return
-def MneToErasmeEdf(EDFName):        #fonction permettant de changer dans le format des caractère par des points : format historique de erasme
+def MneToErasmeEdf(EDFName):        #fonction permettant de changer dans le format des caractï¿½re par des points : format historique de erasme
     fid = open(EDFName, "r+")
     fid.seek(170)
     fid.write("/")
@@ -43,7 +43,7 @@ def MneToErasmeEdf(EDFName):        #fonction permettant de changer dans le form
     fid.seek(181)
     fid.write(":")
     fid.close()
-def readEDFHeader(EDFName):         #fonction permettant de lire l'entête (Header) ce qui donne les info sur le patient,...
+def readEDFHeader(EDFName):         #fonction permettant de lire l'entï¿½te (Header) ce qui donne les info sur le patient,...
     ErasmeToMneEdf(EDFName)
     EDF = open(EDFName, "rb")
     header = {}
@@ -76,14 +76,14 @@ def readEDFHeader(EDFName):         #fonction permettant de lire l'entête (Heade
     EDF.close()
     print(header)
     return header       
-def chunkPrint(string, length):     #fonction permettant de séparer les labels et les mettre dans une liste
+def chunkPrint(string, length):     #fonction permettant de sï¿½parer les labels et les mettre dans une liste
     return (string[0+i:length+i].strip() for i in range(0, len(string), length))
 
 
 #readEDFHeader("PX428090.EDF")
 #saveData("PERSONX0-20220928.resu","PX428090.EDF","Anonym")
 #AnonymiseEDF("PX428090.EDF")
-#AnonymiseResu("PERSONX0-20220928.resu")                             #REMARQUE : la date n'est pas anonymisée dans le fichier resu
+#AnonymiseResu("PERSONX0-20220928.resu")                             #REMARQUE : la date n'est pas anonymisï¿½e dans le fichier resu
 #ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
 #UnAnonymiseEDF("RawAnonyme.EDF","Anonym.txt")
 ChangeAnonymeToName("Anonym.txt")

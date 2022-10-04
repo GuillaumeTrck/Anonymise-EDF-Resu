@@ -1,19 +1,19 @@
 import glob 
 import numpy as np
-import pandas as pd
+#import pandas as pd
 #from edf import *
 #from resu import *
 import sys
 import os
 
 #coucou
-def AnonymiseEDF(EDFName):                                  #fonction permettant d'anonymiser les données du patient du fichier EDF
-    EDF = open(EDFName, "rb")                               #r = read, + signifie écrire dedans et b en bit
+def AnonymiseEDF(EDFName):                                  #fonction permettant d'anonymiser les donnï¿½es du patient du fichier EDF
+    EDF = open(EDFName, "rb")                               #r = read, + signifie ï¿½crire dedans et b en bit
     EDF.read(8)
     EDFText = EDF.read(160).decode('unicode_escape')        #telle lettre egal telle code en binaire (unicode)
     EDF.close() 
     EDF = open(EDFName, "r+")
-    EDF.seek(8)                                             #replacer à partir du caractère 8
+    EDF.seek(8)                                             #replacer ï¿½ partir du caractï¿½re 8
     sss = "x" * 160
     EDF.write(sss)
     EDF.close()
@@ -32,7 +32,7 @@ def AnonymiseEDF(EDFName):                                  #fonction permettant
     print("EDFTXT1: ", EDFText1)
     return EDFText,EDFText1
 
-def AnonymiseResu(resuName):                                #fonction permettant d'anonymiser les données du patient du fichier resu
+def AnonymiseResu(resuName):                                #fonction permettant d'anonymiser les donnï¿½es du patient du fichier resu
     print("Anonymiseresu")                                      
     resu=open(resuName,'r+' )
     resu.seek(144)
@@ -45,7 +45,7 @@ def AnonymiseResu(resuName):                                #fonction permettant
     print(resu)
     return      
 
-def UnAnonymiseEDF(EDFName, EDFText):                      #fonction permettant de déanonymiser les données du patient du fichier EDF
+def UnAnonymiseEDF(EDFName, EDFText):                      #fonction permettant de dï¿½anonymiser les donnï¿½es du patient du fichier EDF
     print(len(EDFText))
     EDF = open(EDFName, "r+")
     EDF.seek(8)
@@ -62,7 +62,7 @@ def UnAnonymiseEDF(EDFName, EDFText):                      #fonction permettant 
     #EDF.close()
     #return
 
-def UnAnonymiseResu(resuName, RawFileName, resuText ):      #fonction permettant de déanonymiser les données du patient du fichier resu
+def UnAnonymiseResu(resuName, RawFileName, resuText ):      #fonction permettant de dï¿½anonymiser les donnï¿½es du patient du fichier resu
     print("iunAnonymiseresu")
     resu=open(resuName,'r+' )
     resu.seek(144)
@@ -72,11 +72,11 @@ def UnAnonymiseResu(resuName, RawFileName, resuText ):      #fonction permettant
     resu.close() 
     return
 
-def saveData(resuName,RawFileName,resuText):                #fonction permettant de sauvegarder les données dans un .txt
-    dataName = resuText+'.txt'                              #crée un fichier txt si non existant
-    dataFile = open(dataName, 'w')                          #w pour whrite, vérifier si avec w le programme crée un fichier texte
+def saveData(resuName,RawFileName,resuText):                #fonction permettant de sauvegarder les donnï¿½es dans un .txt
+    dataName = resuText+'.txt'                              #crï¿½e un fichier txt si non existant
+    dataFile = open(dataName, 'w')                          #w pour whrite, vï¿½rifier si avec w le programme crï¿½e un fichier texte
     dataFile.write(resuName) 
-    dataFile.write('\t')                                    #aller à la ligne \t faire un tab 
+    dataFile.write('\t')                                    #aller ï¿½ la ligne \t faire un tab 
     dataFile.write(RawFileName)
     dataFile.write('\t')
 
@@ -98,10 +98,11 @@ def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction p
     os.rename(RawFileName,'RawAnonyme.EDF')
     return
 
-def ChangeAnonymeToName(txt) :     #remettre en paramètre resuAnonyme et RawAnonyme
+def ChangeAnonymeToName(txt) :     #remettre en paramï¿½tre resuAnonyme et RawAnonyme
+    print("OUI")
     txt=open(txt,'r')
     txt.read(160)
-    resuName = txt.read(22).decode('unicode_escape')
-    print (resuName)
+    resuName=txt.read(22)
+    print(resuName)
     #os.rename(resuAnonyme,'')
     #os.rename(RawAnonyme,'')
