@@ -11,7 +11,7 @@ from resu import *
 import sys
 import os
 from datetime import datetime
-from utils import *
+from logs import *
     
 def AA(resuName, EDFName):
     # 1.Reading header
