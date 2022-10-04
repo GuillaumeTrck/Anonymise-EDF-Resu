@@ -52,7 +52,7 @@ def readEDFHeader(EDFName):
     header['fullHeader'] = EDF.read(header['headerSize']).decode('unicode_escape')
     EDF.close()
     return header
-readEdfHeader("blabla.edf")
+
 def unzipEDF(EDFName, newEDFName, header):
     values=np.fromfile(EDFName,dtype='int8')
     values = values[header['headerSize']:]
