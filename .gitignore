@@ -1,2 +1,2 @@
-__pycache__/
-_.vs/
+__pycache__/*
+.vs/*
