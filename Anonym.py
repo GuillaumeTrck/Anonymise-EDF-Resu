@@ -99,10 +99,9 @@ def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction p
     return
 
 def ChangeAnonymeToName(txt) :     #remettre en param�tre resuAnonyme et RawAnonyme
-    print("OUI")
-    txt=open(txt,'r')
-    txt.read(160)
-    resuName=txt.read(22)
-    print(resuName)
+    fichier=open("txt","r")
+    
+
+    print(txt)
     #os.rename(resuAnonyme,'')
     #os.rename(RawAnonyme,'')
