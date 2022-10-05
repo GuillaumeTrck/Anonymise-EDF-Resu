@@ -89,12 +89,18 @@ def UnAnonymiseEDF(EDFName, FichierTxt):                    #fonction permettant
     EDF.close()
 
 def UnAnonymiseResu(resuName,FichierTxt):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
-    print("iunAnonymiseresu")
+    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    print(matrice[0][5])
+
     resu=open(resuName,'r+' )
+    resu.seek(24)
+    resu.write(matrice[0][4])
+    resu.seek(48)
+    resu.write(matrice[0][5])
     resu.seek(144)
-    # resu.write(RawFileName)
-    # resu.seek(1922)
-    resu.write(FichierTxt)
+    resu.write(matrice[0][1])
+    resu.seek(2008)
+    resu.write(matrice[0][6])
     resu.close() 
     return
 
@@ -112,6 +118,14 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     dataFile.write("Date")
     dataFile.write("\t"*2)
     dataFile.write("Chambre")
+    dataFile.write("\t"*2)
+    dataFile.write("FileNumber")
+    dataFile.write("\t"*2)
+    dataFile.write("Name")
+    dataFile.write("\t"*2)
+    dataFile.write("FirstName")
+    dataFile.write("\t"*2)
+    dataFile.write("BirthDate")
     dataFile.write("\t"*2)
     dataFile.write("Sex")
     dataFile.write("\t"*2)
@@ -139,9 +153,20 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     resu['Room'] = fid.read(4).decode('unicode_escape')  
     dataFile.write(resu['Room'])
     dataFile.write("\t"*2)
-    fid.seek(2008)
+    fid.seek(1922)
+    resu['FileNumber'] =  fid.read(22).decode('unicode_escape')  
+    dataFile.write(resu['FileNumber'])
+    dataFile.write("\t")
+    resu['Name'] =  fid.read(27).decode('unicode_escape')  
+    dataFile.write(resu['Name'])
+    dataFile.write("\t")
+    resu['FirstName'] =  fid.read(27).decode('unicode_escape')  
+    dataFile.write(resu['FirstName']) 
+    dataFile.write("\t")
+    resu['BirthDate'] =  fid.read(10).decode('unicode_escape')  
+    dataFile.write(resu['BirthDate'])
+    dataFile.write("\t"*2)
     resu['Sex'] = fid.read(1).decode('unicode_escape')
-    print(resu['Sex'])
     dataFile.write(resu['Sex'])
 
     dataFile.write("\t"*2)
@@ -150,7 +175,7 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
 
 
     return
-    
+
 def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction permettant d'anonymiser le nom du fichier resu et EDF
     os.rename(resuName,'resuAnonyme.resu')                  #Ne pas mettre resuName entre quote
     os.rename(RawFileName,'RawAnonyme.EDF')

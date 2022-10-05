@@ -80,10 +80,12 @@ def chunkPrint(string, length):     #fonction permettant de s�parer les labels
     return (string[0+i:length+i].strip() for i in range(0, len(string), length))
 
 
-#readEDFHeader("PX428090.EDF")
-#saveData("PERSONX0-20220928.resu","PX428090.EDF","Anonym")
+# readEDFHeader("PX428090.EDF")
+saveData("PERSONX0-20220928.resu","PX428090.EDF","Anonym")
 #AnonymiseEDF("PX428090.EDF")
 #AnonymiseResu("PERSONX0-20220928.resu")                             #REMARQUE : la date n'est pas anonymis�e dans le fichier resu
-#ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
-ChangeAnonymeToName("Anonym.txt","resuAnonyme.resu","RawAnonyme.EDF")       
+# ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
+# ChangeAnonymeToName("Anonym.txt","resuAnonyme.resu","RawAnonyme.EDF")       
 #UnAnonymiseEDF("PX428090.EDF","Anonym.txt")
+#UnAnonymiseResu("PERSONX0-20220928.resu","Anonym.txt")
+
