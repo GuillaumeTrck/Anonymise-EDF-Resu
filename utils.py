@@ -17,9 +17,11 @@ def initLogs(logs):
             fid = open(logName, "w")
             fid.close()
             fid = open(logName, "a")
-        fid.write("{0} -- Start of logs \n".format(datetime.now().strftime("%Y-%m-%d %H:%M")))
-        fid.write("AA - EDFName = " + sys.argv[1] + ", ResuName = " + sys.argv[2] +"\n")
-        fid.close()
+        else: 
+            fid.write("{0} -- Start of logs \n".format(datetime.now().strftime("%Y-%m-%d %H:%M")))
+            fid.write("AA - EDFName = " + sys.argv[1] + ", ResuName = " + sys.argv[2] +"\n")
+            fid.close()
+            printLogs('Logs initialisés')
     return
 
 def printLogs(txt):
