@@ -111,6 +111,10 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     dataFile.write("\t"*11)
     dataFile.write("Date")
     dataFile.write("\t"*2)
+    dataFile.write("Chambre")
+    dataFile.write("\t"*2)
+    dataFile.write("Sex")
+    dataFile.write("\t"*2)
     dataFile.write("ID")
     dataFile.write('\n')
     dataFile.write(resuName) 
@@ -128,11 +132,25 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     dataFile.write('\t')
     dataFile.write(EDFText[160:168])
     dataFile.write('\t')
+
+    fid = open(resuName, "rb")                           
+    resu = {}
+    fid.seek(48)
+    resu['Room'] = fid.read(4).decode('unicode_escape')  
+    dataFile.write(resu['Room'])
+    dataFile.write("\t"*2)
+    fid.seek(2008)
+    resu['Sex'] = fid.read(1).decode('unicode_escape')
+    print(resu['Sex'])
+    dataFile.write(resu['Sex'])
+
+    dataFile.write("\t"*2)
     dataFile.write('ID 1')
     dataFile.close()
 
 
     return
+    
 def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction permettant d'anonymiser le nom du fichier resu et EDF
     os.rename(resuName,'resuAnonyme.resu')                  #Ne pas mettre resuName entre quote
     os.rename(RawFileName,'RawAnonyme.EDF')
