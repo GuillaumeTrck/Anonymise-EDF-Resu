@@ -45,23 +45,20 @@ def AnonymiseResu(resuName):                                #fonction permettant
     return      
 
 def UnAnonymiseEDF(EDFName, FichierTxt):                      #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
-    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1)
-    print(matrice[0][3])
+    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    print(matrice[0][2])
     EDF = open(EDFName, "r+")
     EDF.seek(8)
+    EDF.write(matrice[0][2])
+    EDF.seek(31)
+    EDF.write(" "*49)
+    EDF.seek(80)
     EDF.write(matrice[0][3])
-    EDF.seek()
+    EDF.seek(140)
+    EDF.write(" "*28)
+    EDF.seek(168)
+    EDF.write(matrice[0][4])
     EDF.close()
-
-    #print(EDFText)
-    #print(len(EDFText))
-    #EDF = open(EDFName, "r+")
-    #EDF.seek(168)
-    #EDF.write(EDFText[16:17])
-    #EDF.write(EDFText[14:15])
-    #EDF.write(EDFText[12:13])
-    #EDF.close()
-    #return
 
 def UnAnonymiseResu(resuName, RawFileName, resuText ):      #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
     print("iunAnonymiseresu")
