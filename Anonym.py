@@ -99,8 +99,16 @@ def UnAnonymiseResu(resuName,FichierTxt):                   #fonction permettant
     resu.write(matrice[0][5])
     resu.seek(144)
     resu.write(matrice[0][1])
-    resu.seek(2008)
+    resu.seek(1922)
     resu.write(matrice[0][6])
+    resu.seek(1944)
+    resu.write(matrice[0][7])
+    resu.seek(1971)
+    resu.write(matrice[0][8])
+    resu.seek(1998)
+    resu.write(matrice[0][9])
+    resu.seek(2008)
+    resu.write(matrice[0][10])
     resu.close() 
     return
 
