@@ -2,3 +2,7 @@ __pycache__/*
 .vs/*
 .vscode/*
 logs.txt
+Anonym.txt
+*.edf
+*.EDF
+*.resu

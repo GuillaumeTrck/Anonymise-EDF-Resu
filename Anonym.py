@@ -44,11 +44,13 @@ def AnonymiseResu(resuName):                                #fonction permettant
     print(resu)
     return      
 
-def UnAnonymiseEDF(EDFName, EDFText):                      #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
-    print(len(EDFText))
+def UnAnonymiseEDF(EDFName, FichierTxt):                      #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
+    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1)
+    print(matrice[0][3])
     EDF = open(EDFName, "r+")
     EDF.seek(8)
-    EDF.write(EDFText)
+    EDF.write(matrice[0][3])
+    EDF.seek()
     EDF.close()
 
     #print(EDFText)
@@ -74,6 +76,18 @@ def UnAnonymiseResu(resuName, RawFileName, resuText ):      #fonction permettant
 def saveData(resuName,RawFileName,resuText):                #fonction permettant de sauvegarder les donn�es dans un .txt
     dataName = resuText+'.txt'                              #cr�e un fichier txt si non existant
     dataFile = open(dataName, 'w')                          #w pour whrite, v�rifier si avec w le programme cr�e un fichier texte
+    dataFile.write("resu")
+    dataFile.write("\t"*5)
+    dataFile.write("EDF")
+    dataFile.write("\t"*4)
+    dataFile.write("EDFHeader")
+    dataFile.write("\t"*4)
+    dataFile.write("Champs identification")
+    dataFile.write("\t"*11)
+    dataFile.write("Date")
+    dataFile.write("\t"*2)
+    dataFile.write("ID")
+    dataFile.write('\n')
     dataFile.write(resuName) 
     dataFile.write('\t')                                    #aller � la ligne \t faire un tab 
     dataFile.write(RawFileName)
@@ -85,8 +99,9 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     EDF.close()
     dataFile.write(EDFText[0:23])
     dataFile.write('\t')
+    dataFile.write(EDFText[80:140])
+    dataFile.write('\t')
     dataFile.write(EDFText[160:168])
-   
     dataFile.write('\t')
     dataFile.write('ID 1')
     dataFile.close()
@@ -97,13 +112,14 @@ def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction p
     os.rename(RawFileName,'RawAnonyme.EDF')
     return
 
-def ChangeAnonymeToName(FichierTxt) :     #remettre en param�tre resuAnonyme et RawAnonyme 
-    myline=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U')
-    print(myline[0][:3])
-    print(myline[1][:3])
+def ChangeAnonymeToName(FichierTxt,resuAnonyme,RawAnonyme) :     #remettre en param�tre resuAnonyme et RawAnonyme
+    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    # print(matrice.shape)
+    # print(matrice[0][0])
+    # print(matrice[0][1])
     
-    #os.rename("resuAnonyme.resu",myline[0][0])
-    #os.rename("RawAnonyme.EDF",myline[0][1])
+    os.rename(resuAnonyme,matrice[0][0])
+    os.rename(RawAnonyme,matrice[0][1])
     
                 
     
