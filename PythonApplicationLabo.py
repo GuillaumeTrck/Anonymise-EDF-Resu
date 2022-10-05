@@ -86,4 +86,4 @@ def chunkPrint(string, length):     #fonction permettant de s�parer les labels
 #AnonymiseResu("PERSONX0-20220928.resu")                             #REMARQUE : la date n'est pas anonymis�e dans le fichier resu
 #ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
 #UnAnonymiseEDF("RawAnonyme.EDF","Anonym.txt")
-ChangeAnonymeToName("Anonym.txt","resuAnonyme.resu","RawAnonyme.EDF")
+ChangeAnonymeToName("Anonym.txt")       #"resuAnonyme.resu","RawAnonyme.EDF"

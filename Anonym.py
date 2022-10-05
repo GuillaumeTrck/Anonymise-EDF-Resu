@@ -6,7 +6,6 @@ import numpy as np
 import sys
 import os
 
-#coucou
 def AnonymiseEDF(EDFName):                                  #fonction permettant d'anonymiser les donn�es du patient du fichier EDF
     EDF = open(EDFName, "rb")                               #r = read, + signifie �crire dedans et b en bit
     EDF.read(8)
@@ -98,17 +97,13 @@ def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction p
     os.rename(RawFileName,'RawAnonyme.EDF')
     return
 
-def ChangeAnonymeToName(FichierTxt,resuAnonyme,RawAnonyme) :     #remettre en param�tre resuAnonyme et RawAnonyme
+def ChangeAnonymeToName(FichierTxt) :     #remettre en param�tre resuAnonyme et RawAnonyme 
+    myline=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U')
+    print(myline[0][:3])
+    print(myline[1][:3])
     
-    mylines = []
-    with open (FichierTxt,'rt') as myfile:
-        for myline in myfile:
-            mylines.append(myline.rstrip('\n'))
-            
-    ls=np.array(mylines)
-    ls=np.char.split(ls)
-    print(ls[0][0])
-    print(ls[0][1])
+    #os.rename("resuAnonyme.resu",myline[0][0])
+    #os.rename("RawAnonyme.EDF",myline[0][1])
     
-    os.rename("resuAnonyme.resu",ls[0][0])
-    os.rename("RawAnonyme.EDF",ls[0][1])
+                
+    
