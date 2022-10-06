@@ -90,8 +90,15 @@ def UnAnonymiseEDF(EDFName, FichierTxt):                    #fonction permettant
 
 def UnAnonymiseResu(resuName,FichierTxt):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
     matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    print(matrice[0][3])
+    print(matrice[0][4])
     print(matrice[0][5])
-
+    print(matrice[0][6])
+    print(matrice[0][7])
+    print(matrice[0][8])
+    print(matrice[0][9])
+    print(matrice[0][10])
+  
     resu=open(resuName,'r+' )
     resu.seek(24)
     resu.write(matrice[0][4])
@@ -139,6 +146,7 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     dataFile.write("\t"*2)
     dataFile.write("ID")
     dataFile.write('\n')
+    
     dataFile.write(resuName) 
     dataFile.write('\t')                                    #aller � la ligne \t faire un tab 
     dataFile.write(RawFileName)
@@ -160,24 +168,24 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     fid.seek(48)
     resu['Room'] = fid.read(4).decode('unicode_escape')  
     dataFile.write(resu['Room'])
-    dataFile.write("\t"*2)
+    dataFile.write('\t')
     fid.seek(1922)
     resu['FileNumber'] =  fid.read(22).decode('unicode_escape')  
     dataFile.write(resu['FileNumber'])
-    dataFile.write("\t")
+    dataFile.write('\t')
     resu['Name'] =  fid.read(27).decode('unicode_escape')  
     dataFile.write(resu['Name'])
-    dataFile.write("\t")
+    dataFile.write('\t')
     resu['FirstName'] =  fid.read(27).decode('unicode_escape')  
     dataFile.write(resu['FirstName']) 
-    dataFile.write("\t")
+    dataFile.write('\t')
     resu['BirthDate'] =  fid.read(10).decode('unicode_escape')  
     dataFile.write(resu['BirthDate'])
-    dataFile.write("\t"*2)
+    dataFile.write('\t')
     resu['Sex'] = fid.read(1).decode('unicode_escape')
     dataFile.write(resu['Sex'])
 
-    dataFile.write("\t"*2)
+    dataFile.write('\t')
     dataFile.write('ID 1')
     dataFile.close()
 
