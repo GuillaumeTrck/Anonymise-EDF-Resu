@@ -1,2 +1,2 @@
 resu					EDF				EDFHeader				Champs identification											Date		Chambre		FileNumber		Name		FirstName		BirthDate		Sex		ID
-PERSONX0-20220928.resu	PX428090.EDF	PERSONNE##X##010101MP01	Erasme-ULB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#	28/09/22	28/09/2022	914 	PX428090              	010101MP01            	PERSONNE                   	X                          	01/01/1901	M	ID 1
+PERSONX0-20220928.resu	PX428090.EDF	PERSONNE##X##010101MP01                                                         	Erasme-ULB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#                    	        28/09/22	28/09/2022	914 	PX428090              	010101MP01            	PERSONNE                   	X                          	01/01/1901	M	ID 1

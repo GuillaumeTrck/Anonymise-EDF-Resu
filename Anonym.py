@@ -31,31 +31,27 @@ def AnonymiseResu(resuName):                                #fonction permettant
     resu.close()
     return      
 
-def UnAnonymiseEDF(EDFName, FichierTxt, matrice):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
+def UnAnonymiseEDF(EDFName,matrice):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
     EDF = open(EDFName, "r+")
-    EDF.seek(8)
-    EDF.write(matrice[0][2])
-    EDF.seek(31)
-    EDF.write(" "*49)
-    EDF.seek(80)
-    EDF.write(matrice[0][3])
-    EDF.seek(140)
-    EDF.write(" "*28)
-    EDF.seek(168)
-    EDF.write(matrice[0][4])
+    A = [8,80,160]
+    for i in range(len(A)):
+        EDF.seek(A[i])
+        EDF.write(matrice[0][i+2])
     EDF.close()
+    return
 
-def UnAnonymiseResu(resuName,FichierTxt, matrice):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
-    resu=open(resuName,'r+' )
+def UnAnonymiseResu(resuName,matrice):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
+    resu=open(resuName,'r+')
     A = [24, 48, 144, 1922, 1944, 1971, 1998, 2008] #liste contenant le début des éléments d'intérêt dans le resu. 
-    for i in len(A) :
+    for i in range(len(A)):
         resu.seek(A[i])
         resu.write(matrice[0][i+5])
     resu.close() 
     return
 
-def saveData(resuName,RawFileName, dataName):                #fonction permettant de sauvegarder les donn�es dans un .txt                           #cr�e un fichier txt si non existant
-    dataFile = open(dataName, 'w')                          #w pour whrite, v�rifier si avec w le programme cr�e un fichier texte
+def saveData(resuName,RawFileName, dataName):                                           
+    dataFile = open(dataName, 'w')                         
+    
     # Writting the first line
     dataFile.write("resu")
     dataFile.write("\t"*5)
@@ -84,7 +80,7 @@ def saveData(resuName,RawFileName, dataName):                #fonction permettan
     
     # Writing data
     dataFile.write(resuName) 
-    dataFile.write('\t')                                    #aller � la ligne \t faire un tab 
+    dataFile.write('\t')                                    
     dataFile.write(RawFileName)
     dataFile.write('\t')
 
@@ -96,7 +92,7 @@ def saveData(resuName,RawFileName, dataName):                #fonction permettan
     dataFile.write('\t')
     dataFile.write(EDFText[80:160])
     dataFile.write('\t')
-    dataFile.write(EDFText[160:168])
+    dataFile.write(EDFText[152:168])
     dataFile.write('\t')
 
     fid = open(resuName, "rb")                           
@@ -135,12 +131,12 @@ def saveData(resuName,RawFileName, dataName):                #fonction permettan
 
     return
 
-def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction permettant d'anonymiser le nom du fichier resu et EDF
-    os.rename(resuName,'resuAnonyme.resu')                  #Ne pas mettre resuName entre quote
+def ChangeNameToAnonyme(resuName,RawFileName):                       
+    os.rename(resuName,'resuAnonyme.resu')                  
     os.rename(RawFileName,'RawAnonyme.EDF')
     return
 
-def ChangeAnonymeToName(resuAnonyme,RawAnonyme, matrice) :     #remettre en param�tre resuAnonyme et RawAnonyme
+def ChangeAnonymeToName(resuAnonyme,RawAnonyme, matrice) :     
     os.rename(resuAnonyme,matrice[0][0])
     os.rename(RawAnonyme,matrice[0][1])
     
