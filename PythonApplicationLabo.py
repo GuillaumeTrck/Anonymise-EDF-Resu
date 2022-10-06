@@ -81,12 +81,13 @@ def chunkPrint(string, length):     #fonction permettant de s�parer les labels
 
 
 # readEDFHeader("PX428090.EDF")
-#saveData("PERSONX0-20220928.resu","PX428090.EDF","Anonym")
-# AnonymiseEDF("PX428090.EDF")
-#AnonymiseResu("PERSONX0-20220928.resu")                             #REMARQUE : la date n'est pas anonymis�e dans le fichier resu
-# ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
-# ChangeAnonymeToName("Anonym.txt","resuAnonyme.resu","RawAnonyme.EDF")       
-# UnAnonymiseEDF("PX428090.EDF","Anonym.txt")
+saveData("PERSONX0-20220928.resu","PX428090.EDF","Anonym.txt")
+AnonymiseEDF("PX428090.EDF")
+AnonymiseResu("PERSONX0-20220928.resu")                             #REMARQUE : la date n'est pas anonymis�e dans le fichier resu
+ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
+matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+ChangeAnonymeToName("resuAnonyme.resu","RawAnonyme.EDF", matrice)       
+UnAnonymiseEDF("PX428090.EDF","Anonym.txt")
 UnAnonymiseResu("PERSONX0-20220928.resu","Anonym.txt")
     
 fid = open("PERSONX0-20220928.resu", "rb")                           #permet de verifier les diff infos anonymisees

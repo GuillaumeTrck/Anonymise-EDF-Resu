@@ -7,32 +7,14 @@ import sys
 import os
 
 def AnonymiseEDF(EDFName):                                  #fonction permettant d'anonymiser les donn�es du patient du fichier EDF
-    EDF = open(EDFName, "rb")                               #r = read, + signifie �crire dedans et b en bit
-    EDF.read(8)
-    EDFText = EDF.read(160).decode('unicode_escape')        #telle lettre egal telle code en binaire (unicode)
-    EDF.close() 
     EDF = open(EDFName, "r+")
     EDF.seek(8)                                             #replacer � partir du caract�re 8
-    sss = "x" * 160
+    sss = "x" * 168
     EDF.write(sss)
     EDF.close()
-    
-    EDF = open(EDFName, "rb")
-    EDF.read(168)
-    EDFText1 = EDF.read(8).decode('unicode_escape')
-    EDF.close() 
-    EDF = open(EDFName, "r+")
-    EDF.seek(168)
-    sss = "x" *8
-    EDF.write(sss)
-    EDF.close()
+    return 
 
-    print("EDFTXT: ", EDFText)
-    print("EDFTXT1: ", EDFText1)
-    return EDFText,EDFText1
-
-def AnonymiseResu(resuName):                                #fonction permettant d'anonymiser les donn�es du patient du fichier resu
-    print("Anonymiseresu")                                      
+def AnonymiseResu(resuName):                                #fonction permettant d'anonymiser les donn�es du patient du fichier resu                                     
     resu=open(resuName,'r+' )
     resu.seek(24)                                           #anonymise la date
     sss = "x"*10
@@ -47,34 +29,9 @@ def AnonymiseResu(resuName):                                #fonction permettant
     sss = "x" * 87
     resu.write(sss)
     resu.close()
-    print(resu)
-
-    # fid = open(resuName, "rb")                           #permet de verifier les diff infos anonymisees
-    # resu = {}
-    # fid.seek(48)
-    # resu['Room'] = fid.read(4)
-    # fid.seek(144)
-    # resu['RawFileName'] = fid.read(22)
-    # fid.seek(1922)
-    # resu['FileNumber'] =  fid.read(22)
-    # resu['Name'] =  fid.read(27)
-    # resu['FirstName'] =  fid.read(27) 
-    # resu['BirthDate'] =  fid.read(10)
-    # resu['Sex'] =  fid.read(1)
-    
-    # print(resu['Room'])
-    # print(resu['RawFileName'])
-    # print(resu['FileNumber'])
-    # print(resu['Name'])
-    # print(resu['FirstName'])
-    # print(resu['BirthDate'])
-    # print(resu['Sex'])
-
     return      
 
-def UnAnonymiseEDF(EDFName, FichierTxt):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
-    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    print(matrice[0][2])
+def UnAnonymiseEDF(EDFName, FichierTxt, matrice):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
     EDF = open(EDFName, "r+")
     EDF.seek(8)
     EDF.write(matrice[0][2])
@@ -88,40 +45,18 @@ def UnAnonymiseEDF(EDFName, FichierTxt):                    #fonction permettant
     EDF.write(matrice[0][4])
     EDF.close()
 
-def UnAnonymiseResu(resuName,FichierTxt):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
-    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    # print(matrice[0][3])
-    # print(matrice[0][4])
-    # print(matrice[0][5])
-    # print(matrice[0][6])
-    # print(matrice[0][7])
-    # print(matrice[0][8])
-    # print(matrice[0][9])
-    # print(matrice[0][10])
-  
+def UnAnonymiseResu(resuName,FichierTxt, matrice):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
     resu=open(resuName,'r+' )
-    resu.seek(24)
-    resu.write(matrice[0][5])
-    resu.seek(48)
-    resu.write(matrice[0][6])
-    resu.seek(144)
-    resu.write(matrice[0][7])
-    resu.seek(1922)
-    resu.write(matrice[0][8])
-    resu.seek(1944)
-    resu.write(matrice[0][9])
-    resu.seek(1971)
-    resu.write(matrice[0][10])
-    resu.seek(1998)
-    resu.write(matrice[0][11])
-    resu.seek(2008)
-    resu.write(matrice[0][12])
+    A = [24, 48, 144, 1922, 1944, 1971, 1998, 2008] #liste contenant le début des éléments d'intérêt dans le resu. 
+    for i in len(A) :
+        resu.seek(A[i])
+        resu.write(matrice[0][i+5])
     resu.close() 
     return
 
-def saveData(resuName,RawFileName,resuText):                #fonction permettant de sauvegarder les donn�es dans un .txt
-    dataName = resuText+'.txt'                              #cr�e un fichier txt si non existant
+def saveData(resuName,RawFileName, dataName):                #fonction permettant de sauvegarder les donn�es dans un .txt                           #cr�e un fichier txt si non existant
     dataFile = open(dataName, 'w')                          #w pour whrite, v�rifier si avec w le programme cr�e un fichier texte
+    # Writting the first line
     dataFile.write("resu")
     dataFile.write("\t"*5)
     dataFile.write("EDF")
@@ -147,6 +82,7 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     dataFile.write("ID")
     dataFile.write('\n')
     
+    # Writing data
     dataFile.write(resuName) 
     dataFile.write('\t')                                    #aller � la ligne \t faire un tab 
     dataFile.write(RawFileName)
@@ -156,9 +92,9 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     EDF.read(8)
     EDFText = EDF.read(168).decode('unicode_escape')    
     EDF.close()
-    dataFile.write(EDFText[0:23])
+    dataFile.write(EDFText[0:80])
     dataFile.write('\t')
-    dataFile.write(EDFText[80:140])
+    dataFile.write(EDFText[80:160])
     dataFile.write('\t')
     dataFile.write(EDFText[160:168])
     dataFile.write('\t')
@@ -197,7 +133,6 @@ def saveData(resuName,RawFileName,resuText):                #fonction permettant
     dataFile.write('ID 1')
     dataFile.close()
 
-
     return
 
 def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction permettant d'anonymiser le nom du fichier resu et EDF
@@ -205,12 +140,7 @@ def ChangeNameToAnonyme(resuName,RawFileName):                       #fonction p
     os.rename(RawFileName,'RawAnonyme.EDF')
     return
 
-def ChangeAnonymeToName(FichierTxt,resuAnonyme,RawAnonyme) :     #remettre en param�tre resuAnonyme et RawAnonyme
-    matrice=np.loadtxt(FichierTxt,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    # print(matrice.shape)
-    # print(matrice[0][0])
-    # print(matrice[0][1])
-    
+def ChangeAnonymeToName(resuAnonyme,RawAnonyme, matrice) :     #remettre en param�tre resuAnonyme et RawAnonyme
     os.rename(resuAnonyme,matrice[0][0])
     os.rename(RawAnonyme,matrice[0][1])
     
