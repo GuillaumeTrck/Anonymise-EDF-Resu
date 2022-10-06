@@ -1,0 +1,2 @@
+EDF/EDFHeader/champs identification/Date/ID
+PX428090.EDF	PERSONNE##X##010101MP01                                                         	Erasme-ULB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#                    	        28/09/22	ID

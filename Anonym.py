@@ -31,70 +31,34 @@ def AnonymiseResu(resuName):                                #fonction permettant
     resu.close()
     return      
 
-def UnAnonymiseEDF(EDFName,matrice):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
+def UnAnonymiseEDF(EDFName,matriceEDF):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
     EDF = open(EDFName, "r+")
     A = [8,80,160]
     for i in range(len(A)):
         EDF.seek(A[i])
-        EDF.write(matrice[0][i+2])
+        EDF.write(matriceEDF[0][i+1])
     EDF.close()
     return
 
-def UnAnonymiseResu(resuName,matrice):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
+def UnAnonymiseResu(resuName,matriceresu):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
     resu=open(resuName,'r+')
-    A = [24, 48, 144, 1922, 1944, 1971, 1998, 2008] #liste contenant le début des éléments d'intérêt dans le resu. 
+    A = [24, 48, 144, 1922, 1944, 1971, 1998, 2008,2009] #liste contenant le début des éléments d'intérêt dans le resu. 
     for i in range(len(A)):
         resu.seek(A[i])
-        resu.write(matrice[0][i+5])
+        resu.write(matriceresu[0][i+1])
     resu.close() 
     return
+                                         
+def saveDataresu(resuName,resuData):
+    dataFile = open(resuData, 'w')
 
-def saveData(resuName,RawFileName, dataName):                                           
-    dataFile = open(dataName, 'w')                         
-    
     # Writting the first line
-    dataFile.write("resu")
-    dataFile.write("\t"*5)
-    dataFile.write("EDF")
-    dataFile.write("\t"*4)
-    dataFile.write("EDFHeader")
-    dataFile.write("\t"*4)
-    dataFile.write("Champs identification")
-    dataFile.write("\t"*11)
-    dataFile.write("Date")
-    dataFile.write("\t"*2)
-    dataFile.write("Chambre")
-    dataFile.write("\t"*2)
-    dataFile.write("FileNumber")
-    dataFile.write("\t"*2)
-    dataFile.write("Name")
-    dataFile.write("\t"*2)
-    dataFile.write("FirstName")
-    dataFile.write("\t"*2)
-    dataFile.write("BirthDate")
-    dataFile.write("\t"*2)
-    dataFile.write("Sex")
-    dataFile.write("\t"*2)
-    dataFile.write("ID")
+    dataFile.write("resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID")
     dataFile.write('\n')
-    
+
     # Writing data
     dataFile.write(resuName) 
-    dataFile.write('\t')                                    
-    dataFile.write(RawFileName)
     dataFile.write('\t')
-
-    EDF = open(RawFileName, "rb")       #Permet de prendre les infos du fichier EDF                    
-    EDF.read(8)
-    EDFText = EDF.read(168).decode('unicode_escape')    
-    EDF.close()
-    dataFile.write(EDFText[0:80])
-    dataFile.write('\t')
-    dataFile.write(EDFText[80:160])
-    dataFile.write('\t')
-    dataFile.write(EDFText[152:168])
-    dataFile.write('\t')
-
     fid = open(resuName, "rb")                           
     resu = {}
     fid.seek(24)
@@ -126,9 +90,33 @@ def saveData(resuName,RawFileName, dataName):
     dataFile.write(resu['Sex'])
 
     dataFile.write('\t')
-    dataFile.write('ID 1')
+    dataFile.write('ID')
     dataFile.close()
 
+    return
+
+def saveDataEDF(RawFileName, EDFData):
+    dataFile = open(EDFData, 'w')
+
+    # Writting the first line
+    dataFile.write("EDF/EDFHeader/champs identification/Date/ID")
+    dataFile.write('\n')
+
+    # Writing data
+    dataFile.write(RawFileName)
+    dataFile.write('\t')
+    EDF = open(RawFileName, "rb")                          
+    EDF.read(8)
+    EDFText = EDF.read(168).decode('unicode_escape')    
+    EDF.close()
+    dataFile.write(EDFText[0:80])
+    dataFile.write('\t')
+    dataFile.write(EDFText[80:160])
+    dataFile.write('\t')
+    dataFile.write(EDFText[152:168])
+    dataFile.write('\t')
+    dataFile.write('ID')
+    dataFile.close()
     return
 
 def ChangeNameToAnonyme(resuName,RawFileName):                       
@@ -136,9 +124,9 @@ def ChangeNameToAnonyme(resuName,RawFileName):
     os.rename(RawFileName,'RawAnonyme.EDF')
     return
 
-def ChangeAnonymeToName(resuAnonyme,RawAnonyme, matrice) :     
-    os.rename(resuAnonyme,matrice[0][0])
-    os.rename(RawAnonyme,matrice[0][1])
+def ChangeAnonymeToName(resuAnonyme,RawAnonyme, matriceEDF,matriceresu) :     
+    os.rename(resuAnonyme,matriceresu[0][0])
+    os.rename(RawAnonyme,matriceEDF[0][0])
     
                 
     

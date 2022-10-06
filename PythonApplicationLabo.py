@@ -3,6 +3,7 @@ import mne
 import numpy as np
 import matplotlib.pyplot as plt
 from Anonym import *
+import glob
 
 def readEDF(EDFName):               #fonction permettant de lire les fichier EDF, le fichier doit se trouver dans le dossier du programme 
     ErasmeToMneEdf(EDFName)
@@ -81,35 +82,22 @@ def chunkPrint(string, length):     #fonction permettant de s�parer les labels
 
 
 # readEDFHeader("PX428090.EDF")
-#saveData("PERSONX0-20220928.resu","PX428090.EDF","Anonym.txt")
+#saveDataresu("PERSONX0-20220928.resu","resuData.txt")
+#saveDataEDF("PX428090.EDF","EDFData.txt")
 #AnonymiseEDF("PX428090.EDF")
-#AnonymiseResu("PERSONX0-20220928.resu")                             #REMARQUE : la date n'est pas anonymis�e dans le fichier resu
-# ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
-matrice=np.loadtxt("Anonym.txt",delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-# ChangeAnonymeToName("resuAnonyme.resu","RawAnonyme.EDF", matrice)       
-UnAnonymiseEDF("PX428090.EDF",matrice)
-#UnAnonymiseResu("PERSONX0-20220928.resu",matrice)
-    
-# fid = open("PERSONX0-20220928.resu", "rb")                           #permet de verifier les diff infos anonymisees
-# resu = {}
-# fid.seek(24)
-# resu['ExamDate'] = fid.read(10)
-# fid.seek(48)
-# resu['Room'] = fid.read(4)
-# fid.seek(144)
-# resu['RawFileName'] = fid.read(22)
-# fid.seek(1922)
-# resu['FileNumber'] =  fid.read(22)
-# resu['Name'] =  fid.read(27)
-# resu['FirstName'] =  fid.read(27) 
-# resu['BirthDate'] =  fid.read(10)
-# resu['Sex'] =  fid.read(1)
+#AnonymiseResu("PERSONX0-20220928.resu")                            
+#ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
+matriceEDF=np.loadtxt("EDFData.txt",delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+matriceresu=np.loadtxt("resuData.txt",delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+#ChangeAnonymeToName("resuAnonyme.resu","RawAnonyme.EDF", matriceEDF,matriceresu)       
+#UnAnonymiseEDF("PX428090.EDF",matriceEDF)
+#UnAnonymiseResu("PERSONX0-20220928.resu",matriceresu)
 
-# print(resu['ExamDate'])    
-# print(resu['Room'])
-# print(resu['RawFileName'])
-# print(resu['FileNumber'])
-# print(resu['Name'])
-# print(resu['FirstName'])
-# print(resu['BirthDate'])
-# print(resu['Sex'])
+files=glob.glob("*.txt")
+ 
+
+
+
+
+
+
