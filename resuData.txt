@@ -1,2 +1,3 @@
 resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID
-PERSONX0-20220928.resu	28/09/2022	914 	PX428090              	010101MP01            	PERSONNE                   	X                          	01/01/1901	M	ID
+PERSONX0-20220928.resu	28/09/2022	914 	PX428090              	010101MP01            	PERSONNE                   	X                          	01/01/1901	M	1
+PERSONX0-20220928.resu	28/09/2022	914 	PX428090              	010101MP01            	PERSONNE                   	X                          	01/01/1901	M	2

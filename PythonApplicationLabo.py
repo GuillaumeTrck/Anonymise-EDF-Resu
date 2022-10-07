@@ -82,16 +82,29 @@ def chunkPrint(string, length):     #fonction permettant de s�parer les labels
 
 
 # readEDFHeader("PX428090.EDF")
-#saveDataresu("PERSONX0-20220928.resu","resuData.txt")
-#saveDataEDF("PX428090.EDF","EDFData.txt")
+test=FirstLine("EDFData.txt","resuData.txt")
+print(test)
+if test :
+     ID = 1
+else :
+     ID = CheckID()
+
+saveDataEDF("PX428090.EDF","EDFData.txt",ID)
+saveDataresu("PERSONX0-20220928.resu","resuData.txt",ID)
+#matriceEDF=np.loadtxt("EDFData.txt",delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+#matriceresu=np.loadtxt("resuData.txt",delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+
 #AnonymiseEDF("PX428090.EDF")
 #AnonymiseResu("PERSONX0-20220928.resu")                            
 #ChangeNameToAnonyme("PERSONX0-20220928.resu","PX428090.EDF")
-matriceEDF=np.loadtxt("EDFData.txt",delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-matriceresu=np.loadtxt("resuData.txt",delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
 #ChangeAnonymeToName("resuAnonyme.resu","RawAnonyme.EDF", matriceEDF,matriceresu)       
 #UnAnonymiseEDF("PX428090.EDF",matriceEDF)
 #UnAnonymiseResu("PERSONX0-20220928.resu",matriceresu)
+
+
+
+
+
 
 files=glob.glob("*.txt")
  

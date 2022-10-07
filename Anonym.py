@@ -1,4 +1,6 @@
-import glob 
+import glob
+from tokenize import Double
+from xmlrpc.client import boolean 
 import numpy as np
 #import pandas as pd
 #from edf import *
@@ -49,14 +51,10 @@ def UnAnonymiseResu(resuName,matriceresu):                   #fonction permettan
     resu.close() 
     return
                                          
-def saveDataresu(resuName,resuData):
-    dataFile = open(resuData, 'w')
-
-    # Writting the first line
-    dataFile.write("resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID")
-    dataFile.write('\n')
-
+def saveDataresu(resuName,resuData,ID):
+    
     # Writing data
+    dataFile = open(resuData, 'a')
     dataFile.write(resuName) 
     dataFile.write('\t')
     fid = open(resuName, "rb")                           
@@ -88,21 +86,18 @@ def saveDataresu(resuName,resuData):
     dataFile.write('\t')
     resu['Sex'] = fid.read(1).decode('unicode_escape')
     dataFile.write(resu['Sex'])
-
     dataFile.write('\t')
-    dataFile.write('ID')
+    dataFile.write(str(ID))
+    dataFile.write('\n')
+    fid.close()
     dataFile.close()
 
     return
 
-def saveDataEDF(RawFileName, EDFData):
-    dataFile = open(EDFData, 'w')
-
-    # Writting the first line
-    dataFile.write("EDF/EDFHeader/champs identification/Date/ID")
-    dataFile.write('\n')
+def saveDataEDF(RawFileName, EDFData,ID):
 
     # Writing data
+    dataFile = open(EDFData, "a")
     dataFile.write(RawFileName)
     dataFile.write('\t')
     EDF = open(RawFileName, "rb")                          
@@ -110,14 +105,52 @@ def saveDataEDF(RawFileName, EDFData):
     EDFText = EDF.read(168).decode('unicode_escape')    
     EDF.close()
     dataFile.write(EDFText[0:80])
-    dataFile.write('\t')
     dataFile.write(EDFText[80:160])
     dataFile.write('\t')
     dataFile.write(EDFText[152:168])
     dataFile.write('\t')
-    dataFile.write('ID')
+    dataFile.write(str(ID))
+    dataFile.write('\n')
     dataFile.close()
+
     return
+
+def FirstLine(EDFData,resuData):
+
+    dataFile = open(EDFData, 'rb')
+    ligne1=dataFile.readlines(1)
+    dataFile = open(resuData, 'rb')
+    ligne2=dataFile.readlines(1)
+
+
+    # Writting the first line
+    if not ligne1 and not ligne2:
+        dataFile = open(EDFData, 'w')
+        dataFile.write("EDF/EDFHeader/champs identification/Date/ID")
+        dataFile.write('\n')
+        dataFile.close()
+
+        dataFile = open(resuData, 'w')
+        dataFile.write("resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID")
+        dataFile.write('\n')
+        dataFile.close()
+        
+        return True
+    else:
+        return False 
+
+def CheckID():
+    matriceEDFID=np.loadtxt("EDFData.txt",delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=3,ndmin=2)
+    print(matriceEDFID)
+    print(max(matriceEDFID))
+    EDFID = int(max(matriceEDFID) +1)
+    
+    matriceresuID=np.loadtxt("resuData.txt",delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=9,ndmin=2)
+    print(matriceresuID)
+    print(max(matriceresuID))
+    resuID = int(max(matriceresuID) +1)
+
+    return max([EDFID,resuID])
 
 def ChangeNameToAnonyme(resuName,RawFileName):                       
     os.rename(resuName,'resuAnonyme.resu')                  
