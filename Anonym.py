@@ -7,6 +7,7 @@ import numpy as np
 #from resu import *
 import sys
 import os
+import argparse
 
 def AnonymiseEDF(EDFName):                                  #fonction permettant d'anonymiser les donn�es du patient du fichier EDF
     EDF = open(EDFName, "r+")
@@ -115,21 +116,29 @@ def saveDataEDF(RawFileName, EDFData,ID):
 
     return
 
-def FirstLine(EDFData,resuData):
+def FirstLineEDF(EDFData):
 
     dataFile = open(EDFData, 'rb')
     ligne1=dataFile.readlines(1)
-    dataFile = open(resuData, 'rb')
-    ligne2=dataFile.readlines(1)
-
 
     # Writting the first line
-    if not ligne1 and not ligne2:
+    if not ligne1:    
         dataFile = open(EDFData, 'w')
         dataFile.write("EDF/EDFHeader/champs identification/Date/ID")
         dataFile.write('\n')
         dataFile.close()
 
+        return True
+    else:
+        return False 
+
+def FirstLineresu(resuData):
+
+    dataFile = open(resuData, 'rb')
+    ligne2=dataFile.readlines(1)
+
+    # Writting the first line
+    if not ligne2:
         dataFile = open(resuData, 'w')
         dataFile.write("resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID")
         dataFile.write('\n')
@@ -140,26 +149,37 @@ def FirstLine(EDFData,resuData):
         return False 
 
 def CheckID():
+
     matriceEDFID=np.loadtxt("EDFData.txt",delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=3,ndmin=2)
     print(matriceEDFID)
     print(max(matriceEDFID))
     EDFID = int(max(matriceEDFID) +1)
-    
+
     matriceresuID=np.loadtxt("resuData.txt",delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=9,ndmin=2)
     print(matriceresuID)
     print(max(matriceresuID))
     resuID = int(max(matriceresuID) +1)
 
-    return max([EDFID,resuID])
+    return max([EDFID,resuID])   
 
-def ChangeNameToAnonyme(resuName,RawFileName):                       
-    os.rename(resuName,'resuAnonyme.resu')                  
-    os.rename(RawFileName,'RawAnonyme.EDF')
-    return
+def ChangeNameToAnonyme(resuName, rawFileName, ID): 
+    resuAnonymeFileName="resuAnonyme{0}.resu".format(ID)                      
+    os.rename(resuName,resuAnonymeFileName)   
+    rawAnonymeFileName = "RawAnonyme{0}.EDF".format(ID)               
+    os.rename(rawFileName,rawAnonymeFileName)
+    return [resuAnonymeFileName,rawAnonymeFileName]
 
-def ChangeAnonymeToName(resuAnonyme,RawAnonyme, matriceEDF,matriceresu) :     
-    os.rename(resuAnonyme,matriceresu[0][0])
-    os.rename(RawAnonyme,matriceEDF[0][0])
+def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu) :     
+    resuFileName=matriceresu[0][0]
+    os.rename(resuAnonyme,resuFileName)
+    EDFFileName=matriceEDF[0][0]
+    os.rename(rawAnonyme,EDFFileName)
+
+    return [resuFileName,EDFFileName] 
+
+def LinkingResuIDAndEDFID(resuID):
     
-                
+    EDFID=resuID
+
+    return EDFID               
     
