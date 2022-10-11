@@ -1,4 +1,6 @@
 import glob
+from itertools import count
+from re import I
 from tokenize import Double
 from xmlrpc.client import boolean 
 import numpy as np
@@ -18,7 +20,7 @@ def AnonymiseEDF(EDFName):                                  #fonction permettant
     return 
 
 def AnonymiseResu(resuName):                                #fonction permettant d'anonymiser les donn�es du patient du fichier resu                                     
-    resu=open(resuName,'r+' )
+    resu=open(resuName,'r+')
     resu.seek(24)                                           #anonymise la date
     sss = "x"*10
     resu.write(sss)
@@ -169,17 +171,18 @@ def ChangeNameToAnonyme(resuName, rawFileName, ID):
     os.rename(rawFileName,rawAnonymeFileName)
     return [resuAnonymeFileName,rawAnonymeFileName]
 
-def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu) :     
-    resuFileName=matriceresu[0][0]
+def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu,i) :
+
+    resuFileName=matriceresu[i][0]
+    print(type(resuFileName))
     os.rename(resuAnonyme,resuFileName)
-    EDFFileName=matriceEDF[0][0]
+    EDFFileName=matriceEDF[i][0]
+    print(type(EDFFileName))
     os.rename(rawAnonyme,EDFFileName)
 
     return [resuFileName,EDFFileName] 
 
-def LinkingResuIDAndEDFID(resuID):
-    
-    EDFID=resuID
-
-    return EDFID               
-    
+def CheckInDataFile(matriceEDF,IDFichierAnonyme):
+    i=np.where(matriceEDF==IDFichierAnonyme)
+    print("i= {}".format(i))
+    return i[0]

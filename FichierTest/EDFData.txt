@@ -1,0 +1,5 @@
+EDF/EDFHeader/champs identification/Date/ID
+CX230050.EDF	C___##X__##801218MC0201-33                                                      Erasme-ULB-Endymion##C03.48##20##18/12/1980##912##Pa#                           	        30/05/06	1
+GS212100.EDF	G___##S__##890624FG0101-45                                                      Erasme-ULB-Endymion##C03.50##20##24/06/1989##912##Pa&99#136#                    	        12/10/11	2
+PM807100.EDF	PERSONNE##MAE##010101FP01                                                       Erasme-ULB-Endymion##C04.05##20##01/01/2001##918##P9&03#000#                    	        07/10/22	3
+PX428090.EDF	PERSONNE##X##010101MP01                                                         Erasme-ULB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#                    	        28/09/22	4
