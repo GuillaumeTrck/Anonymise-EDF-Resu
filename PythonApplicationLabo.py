@@ -7,15 +7,15 @@ import glob
 import argparse
 
 parser=argparse.ArgumentParser(description='Save Data EDF and resu')
-parser.add_argument('-f','--file', required=False, help="File name with EDF and resu")
+parser.add_argument('-a','--anomyse', required=False, help="File name with EDF and resu")
 parser.add_argument('-d','--EDFData', required=True, help="Edf data text name")
 parser.add_argument('-v','--resuData', required=True, help="resu data text name")
-parser.add_argument('-u','--unAnomyse', required=False, help="unanomyse edf and resu in file")
+parser.add_argument('-u','--unAnomyse', required=False, help="File name with EDF and resu anomyse")
 
 args=parser.parse_args()
 
 
-file=args.file
+file=args.anomyse
 fileA=args.unAnomyse
 EDFData=args.EDFData
 resuData=args.resuData
@@ -66,6 +66,7 @@ def AN():
     resuList=glob.glob("*.resu")
     print(type(resuList))
     print(resuList)
+    print(EDFList)
 
     test=FirstLineEDF(EDFData)
     test1=FirstLineresu(resuData)
@@ -105,7 +106,7 @@ def AN():
 if (args.unAnomyse):
     UN()
 
-elif(args.file):
+elif(args.anomyse):
     AN()
 
 

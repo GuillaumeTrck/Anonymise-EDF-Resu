@@ -64,10 +64,16 @@ def UnAnonymiseResu(resuName,matriceresu):                   #fonction permettan
                                          
 def saveDataresu(resuName,resuData,ID):
     x='resuAnonyme'
+    matriceresu=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    y=resuName
+    print(y)
     if x in resuName:
+        print("Fichier resu déjà sauvé")
+    elif y in matriceresu:
         print("Fichier resu déjà sauvé")
     else:
     # Writing data
+        print("J'ai bien sauvé les données")
         dataFile = open(resuData, 'a')
         dataFile.write(resuName) 
         dataFile.write('\t')
@@ -110,7 +116,11 @@ def saveDataresu(resuName,resuData,ID):
 
 def saveDataEDF(RawFileName, EDFData,ID):
     x='xxxxxxxxxxxxxxxxxxxxxx.EDF'
+    y=RawFileName
+    matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
     if x in RawFileName:
+        print("Fichier EDF déjà sauvé")
+    elif y in matriceEDF:
         print("Fichier EDF déjà sauvé")
     else:
     # Writing data
