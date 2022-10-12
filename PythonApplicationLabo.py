@@ -49,6 +49,7 @@ def UN():
         originalResuName=glob.glob('resuAnonyme'+IDFichierAnonyme+terminaisonResu)
         print(originalEDFName)
         print(originalResuName)
+        print(i)
         i=int(i)
         originalsNames=ChangeAnonymeToName(originalResuName[0],originalEDFName[0], matriceEDF,matriceresu,i)
         print(originalsNames[0])
@@ -75,7 +76,7 @@ def AN():
     if test and test1:
         ID = 1
     else :
-        ID = CheckID()
+        ID = CheckID(EDFList,resuList)
 
     for resu in resuList:
         saveDataresu(resu,resuData,ID)
