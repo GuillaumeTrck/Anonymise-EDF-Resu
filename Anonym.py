@@ -44,21 +44,21 @@ def AnonymiseResu(resuName):                                #fonction permettant
         resu.close()
     return      
 
-def UnAnonymiseEDF(EDFName,matriceEDF):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
+def UnAnonymiseEDF(EDFName,matriceEDF,a):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
     EDF = open(EDFName, "r+")
     A = [8,80,160]
     for i in range(len(A)):
         EDF.seek(A[i])
-        EDF.write(matriceEDF[0][i+1])
+        EDF.write(matriceEDF[a][i+1])
     EDF.close()
     return
 
-def UnAnonymiseResu(resuName,matriceresu):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
+def UnAnonymiseResu(resuName,matriceresu,a):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
     resu=open(resuName,'r+')
     A = [24, 48, 144, 1922, 1944, 1971, 1998, 2008,2009] #liste contenant le début des éléments d'intérêt dans le resu. 
     for i in range(len(A)):
         resu.seek(A[i])
-        resu.write(matriceresu[0][i+1])
+        resu.write(matriceresu[a][i+1])
     resu.close() 
     return
                                          
