@@ -49,10 +49,13 @@ def UN():
         originalResuName=glob.glob('resuAnonyme'+IDFichierAnonyme+terminaisonResu)
         print(originalEDFName)
         print(originalResuName)
+        print(i)
         i=int(i)
         originalsNames=ChangeAnonymeToName(originalResuName[0],originalEDFName[0], matriceEDF,matriceresu,i)
-        UnAnonymiseEDF(originalsNames[1],matriceEDF)
-        UnAnonymiseResu(originalsNames[0],matriceresu)
+        print(originalsNames[0])
+        print(originalsNames[1])
+        UnAnonymiseEDF(originalsNames[1],matriceEDF,i)
+        UnAnonymiseResu(originalsNames[0],matriceresu,i)
         i=int(i)
         print(type(i))
         i=i+1
@@ -73,12 +76,13 @@ def AN():
     if test and test1:
         ID = 1
     else :
-        ID = CheckID()
+        ID = CheckID(EDFList,resuList)
 
     for resu in resuList:
         saveDataresu(resu,resuData,ID)
         
         #1. récupérer edfname
+        print(resu)
         fid = open(resu, "rb")                                                   
         fid.seek(144)
         RawFileName= fid.read(22).decode('unicode_escape')
@@ -94,6 +98,8 @@ def AN():
         saveDataEDF(RawFileNameStripTerm,EDFData,ID)
 
         #4 Anonymise edf et resu (nom et données)
+        print(RawFileNameStripTerm)
+        print(resu)
         AnonymiseEDF(RawFileNameStripTerm)
         AnonymiseResu(resu)
         anonymeNames=ChangeNameToAnonyme(resu,RawFileNameStripTerm,ID)
