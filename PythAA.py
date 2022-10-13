@@ -127,5 +127,6 @@ def AA(resuName, EDFName):
 
 args = parseArguments()
 initLogs(args.logs)
+printLogs("AA - EDFName = " + args.edf + ", ResuName = " + args.edf +"\n")
 if (args.stages):
     AA(args.edf, args.resu)

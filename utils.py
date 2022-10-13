@@ -1,4 +1,3 @@
-import sys
 import argparse
 from datetime import datetime
 
@@ -19,7 +18,6 @@ def initLogs(logs):
             fid = open(logName, "a")
         else: 
             fid.write("{0} -- Start of logs \n".format(datetime.now().strftime("%Y-%m-%d %H:%M")))
-            fid.write("AA - EDFName = " + sys.argv[1] + ", ResuName = " + sys.argv[2] +"\n")
             fid.close()
             printLogs('Logs initialisés')
     return
