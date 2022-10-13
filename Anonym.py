@@ -71,8 +71,7 @@ def saveDataresu(resuName,resuData,ID):
     print(y)
     if x in resuName:
         print("Fichier resu déjà sauvé")
-    elif y in matriceresu:
-        print("Fichier resu déjà sauvé")
+        return False
     else:
     # Writing data
         print("J'ai bien sauvé les données")
@@ -123,7 +122,7 @@ def saveDataresu(resuName,resuData,ID):
         fid.close()
         dataFile.close()
 
-    return
+    return True
 
 def saveDataEDF(RawFileName, EDFData,ID):
     x='xxxxxxxxxxxxxxxxxxxxxx.EDF'
@@ -135,8 +134,7 @@ def saveDataEDF(RawFileName, EDFData,ID):
 
     if x in RawFileName:
         print("Fichier EDF déjà sauvé")
-    elif y in matriceEDF:
-        print("Fichier EDF déjà sauvé")
+        return
     else:
     # Writing data
         try:
@@ -205,31 +203,17 @@ def FirstLineresu(resuData):
     else:
         return False 
 
-def CheckID(EDFList,resuList):
-    try:
-        matriceEDFName=np.loadtxt("EDFData.txt",dtype=str, delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=[0,3],ndmin=2)
-        matriceresuName=np.loadtxt("resuData.txt",dtype=str,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=[0,9],ndmin=2)
-    except:
-        printLogs("Problème chargement matrice EDF et resu")
+def CheckID(EDFData,resuData):
 
-    for element in  matriceEDFName : 
-        if element[0] in EDFList:
-            print("element1" + str(element[1]))
-            EDFID = element[1]
-            break
-        else :
-            print(element[1])
-            print(max(element[1]))
-            EDFID = int(max(element[1]) +1)
+    matriceEDFID=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=3,ndmin=2)
+    print(matriceEDFID)
+    print(max(matriceEDFID))
+    EDFID = int(max(matriceEDFID) +1)
 
-    for element in  matriceresuName : 
-        if element[0] in resuList:
-            resuID = element[1]
-            break
-        else :
-            print(element[1])
-            print(max(element[1]))
-            resuID = int(max(element[1]) +1)
+    matriceresuID=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=9,ndmin=2)
+    print(matriceresuID)
+    print(max(matriceresuID))
+    resuID = int(max(matriceresuID) +1)
 
     return max([EDFID,resuID])
 

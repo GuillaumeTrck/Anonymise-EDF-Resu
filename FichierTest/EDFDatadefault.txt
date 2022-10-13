@@ -2,3 +2,16 @@ EDF/EDFHeader/champs identification/Date/ID
 GS212100.EDF	G___##S__##890624FG0101-45                                                      Erasme-ULB-Endymion##C03.50##20##24/06/1989##912##Pa&99#136#                    	        12/10/11	1
 PM807100.EDF	PERSONNE##MAE##010101FP01                                                       Erasme-ULB-Endymion##C04.05##20##01/01/2001##918##P9&03#000#                    	        07/10/22	2
 PX428090.EDF	PERSONNE##X##010101MP01                                                         Erasme-ULB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#                    	        28/09/22	3
+CX230050.EDF	C___##X__##801218MC0201-33                                                      Erasme-ULB-Endymion##C03.48##20##18/12/1980##912##Pa#                           	        30/05/06	4
+CX230050.EDF	C___##X__##801218MC0201-33                                                      30/05/06LB-Endymion##C03.48##20##18/12/1980##912##Pa#                   4       	4       xxxxxxxx	5
+GS212100.EDF	G___##S__##890624FG0101-45                                                      12/10/11LB-Endymion##C03.50##20##24/06/1989##912##Pa&99#136#            1       	1       xxxxxxxx	6
+PM807100.EDF	PERSONNE##MAE##010101FP01                                                       07/10/22LB-Endymion##C04.05##20##01/01/2001##918##P9&03#000#            2       	2       xxxxxxxx	7
+PX428090.EDF	PERSONNE##X##010101MP01                                                         28/09/22LB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#            3       	3       xxxxxxxx	8
+CX230050.EDF	C___##X__##801218MC0201-33                                                      Erasme-ULB-Endymion##C03.48##20##18/12/1980##912##Pa#                           	        30/05/06	9
+GS212100.EDF	G___##S__##890624FG0101-45                                                      Erasme-ULB-Endymion##C03.50##20##24/06/1989##912##Pa&99#136#                    	        12/10/11	10
+PM807100.EDF	PERSONNE##MAE##010101FP01                                                       Erasme-ULB-Endymion##C04.05##20##01/01/2001##918##P9&03#000#                    	        07/10/22	11
+PX428090.EDF	PERSONNE##X##010101MP01                                                         Erasme-ULB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#                    	        28/09/22	12
+CX230050.EDF	C___##X__##801218MC0201-33                                                      Erasme-ULB-Endymion##C03.48##20##18/12/1980##912##Pa#                           	        30/05/06	13
+GS212100.EDF	G___##S__##890624FG0101-45                                                      Erasme-ULB-Endymion##C03.50##20##24/06/1989##912##Pa&99#136#                    	        12/10/11	14
+PM807100.EDF	PERSONNE##MAE##010101FP01                                                       Erasme-ULB-Endymion##C04.05##20##01/01/2001##918##P9&03#000#                    	        07/10/22	15
+PX428090.EDF	PERSONNE##X##010101MP01                                                         Erasme-ULB-Endymion##C04.05##20##01/01/1901##914##P9&03#000#                    	        28/09/22	16
