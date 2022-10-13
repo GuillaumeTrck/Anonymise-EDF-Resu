@@ -1,15 +1,6 @@
-import glob
-from itertools import count
-from re import I
-from tokenize import Double
-from xmlrpc.client import boolean 
 import numpy as np
-#import pandas as pd
-#from edf import *
-#from resu import *
-import sys
 import os
-import argparse
+from utils import printLogs
 
 
 def AnonymiseEDF(EDFName):                                  #fonction permettant d'anonymiser les donn�es du patient du fichier EDF
@@ -46,7 +37,10 @@ def AnonymiseResu(resuName):                                #fonction permettant
     return      
 
 def UnAnonymiseEDF(EDFName,matriceEDF,a):                    #fonction permettant de d�anonymiser les donn�es du patient du fichier EDF
-    EDF = open(EDFName, "r+")
+    try:
+        EDF = open(EDFName, "r+")
+    except:
+        printLogs("Problème ouverture fichier EDF")
     A = [8,80,160]
     for i in range(len(A)):
         EDF.seek(A[i])
@@ -55,7 +49,10 @@ def UnAnonymiseEDF(EDFName,matriceEDF,a):                    #fonction permettan
     return
 
 def UnAnonymiseResu(resuName,matriceresu,a):                   #fonction permettant de d�anonymiser les donn�es du patient du fichier resu
-    resu=open(resuName,'r+')
+    try:
+        resu=open(resuName,'r+')
+    except:
+        printLogs("Problème ouverture fichier resu")
     A = [24, 48, 144, 1922, 1944, 1971, 1998, 2008,2009] #liste contenant le début des éléments d'intérêt dans le resu. 
     for i in range(len(A)):
         resu.seek(A[i])
@@ -65,7 +62,11 @@ def UnAnonymiseResu(resuName,matriceresu,a):                   #fonction permett
                                          
 def saveDataresu(resuName,resuData,ID):
     x='resuAnonyme'
-    matriceresu=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    try:
+        matriceresu=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    except:
+        printLogs("Problème chargement matrice resu")
+
     y=resuName
     print(y)
     if x in resuName:
@@ -75,10 +76,19 @@ def saveDataresu(resuName,resuData,ID):
     else:
     # Writing data
         print("J'ai bien sauvé les données")
-        dataFile = open(resuData, 'a')
+        try:
+            dataFile = open(resuData, 'a')
+        except:
+            printLogs("Problème ouverture resuData")
+
         dataFile.write(resuName) 
         dataFile.write('\t')
-        fid = open(resuName, "rb")                           
+
+        try :
+            fid = open(resuName, "rb")
+        except:
+            printLogs("Problème ouverture resu")
+
         resu = {}
         fid.seek(24)
         resu['ExamDate'] = fid.read(10).decode('unicode_escape')
@@ -118,17 +128,29 @@ def saveDataresu(resuName,resuData,ID):
 def saveDataEDF(RawFileName, EDFData,ID):
     x='xxxxxxxxxxxxxxxxxxxxxx.EDF'
     y=RawFileName
-    matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    try:
+        matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    except:
+        printLogs("Problème chargement matrice EDF")
+
     if x in RawFileName:
         print("Fichier EDF déjà sauvé")
     elif y in matriceEDF:
         print("Fichier EDF déjà sauvé")
     else:
     # Writing data
-        dataFile = open(EDFData, "a")
+        try:
+            dataFile = open(EDFData, "a")
+        except:
+            printLogs("Problème ouverture EDFData")
         dataFile.write(RawFileName)
         dataFile.write('\t')
-        EDF = open(RawFileName, "rb")                          
+        
+        try:
+            EDF = open(RawFileName, "rb")
+        except:
+            printLogs("Problème ouverture EDF")       
+
         EDF.read(8)
         EDFText = EDF.read(168).decode('unicode_escape')    
         EDF.close()
@@ -145,12 +167,20 @@ def saveDataEDF(RawFileName, EDFData,ID):
 
 def FirstLineEDF(EDFData):
 
-    dataFile = open(EDFData, 'rb')
+    try:
+        dataFile = open(EDFData, 'rb')
+    except:
+        printLogs("Problème ouverture fichier EDFData")
+    
     ligne1=dataFile.readlines(1)
 
     # Writting the first line
-    if not ligne1:    
-        dataFile = open(EDFData, 'w')
+    if not ligne1:
+        try:    
+            dataFile = open(EDFData, 'w')
+        except:
+            printLogs("Problème ouverture fichier EDFData")
+
         dataFile.write("EDF/EDFHeader/champs identification/Date/ID")
         dataFile.write('\n')
         dataFile.close()
@@ -161,7 +191,7 @@ def FirstLineEDF(EDFData):
 
 def FirstLineresu(resuData):
 
-    dataFile = open(resuData, 'rb')
+    dataFile = open(resuData, 'rb') 
     ligne2=dataFile.readlines(1)
 
     # Writting the first line
@@ -176,10 +206,12 @@ def FirstLineresu(resuData):
         return False 
 
 def CheckID(EDFList,resuList):
-    
-    matriceEDFName=np.loadtxt("EDFData.txt",dtype=str, delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=[0,3],ndmin=2)
-    matriceresuName=np.loadtxt("resuData.txt",dtype=str,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=[0,9],ndmin=2)
- 
+    try:
+        matriceEDFName=np.loadtxt("EDFData.txt",dtype=str, delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=[0,3],ndmin=2)
+        matriceresuName=np.loadtxt("resuData.txt",dtype=str,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=[0,9],ndmin=2)
+    except:
+        printLogs("Problème chargement matrice EDF et resu")
+
     for element in  matriceEDFName : 
         if element[0] in EDFList:
             print("element1" + str(element[1]))
@@ -229,5 +261,5 @@ def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu,i) :
 
 def CheckInDataFile(matriceEDF,IDFichierAnonyme):
     i=np.where(matriceEDF==IDFichierAnonyme)
-    print("i= {}".format(i))
+    #print("i= {}".format(i))
     return i[0]

@@ -5,30 +5,56 @@ import matplotlib.pyplot as plt
 from Anonym import *
 import glob
 import argparse
+from utils import *
 
-parser=argparse.ArgumentParser(description='Save Data EDF and resu')
-parser.add_argument('-a','--anomyse', required=False, help="File name with EDF and resu")
-parser.add_argument('-d','--EDFData', required=True, help="Edf data text name")
-parser.add_argument('-v','--resuData', required=True, help="resu data text name")
-parser.add_argument('-u','--unAnomyse', required=False, help="File name with EDF and resu anomyse")
+initLogs("LogsAnonyme.txt")
+parser=argparse.ArgumentParser(description='Anomyse/Unanomyse EDF and resu')
+parser.add_argument('-f','--file',required=True,help="File with EDF and resu")
+parser.add_argument('-a','--anomyse', required=False,action="store_true", help="Anomyse edf and resu")
+parser.add_argument('-d','--EDFData', required=False, help="Edf data text name")
+parser.add_argument('-v','--resuData', required=False, help="resu data text name")
+parser.add_argument('-u','--unAnomyse', required=False,action="store_true", help="Unanomyse edf and resu")
 
 args=parser.parse_args()
 
 
-file=args.anomyse
-fileA=args.unAnomyse
-EDFData=args.EDFData
-resuData=args.resuData
+anomyse=args.anomyse
+unAnomyse=args.unAnomyse
+file=args.file
+os.chdir(file)
+
+if args.EDFData:
+    EDFData=args.EDFData
+else:
+    try:
+        EDFData="EDFDatadefault.txt"
+        fid=open(EDFData,'a')
+        fid.close()
+    except:
+        printLogs("Le fichier txt n'a pas été créé")
+
+if args.resuData:
+    resuData=args.resuData
+else:
+    try:
+        resuData="resuDataDefault.txt"
+        fid=open(resuData,'a')
+        fid.close()
+    except:
+        printLogs("Le fichier txt n'a pas été créé")
 
 
 #6 unanonymiser edf et resu (nom et données)
 def UN():    
-    os.chdir(fileA)
     EDFList=glob.glob("*.EDF")
     resuList=glob.glob("*.resu")
 
-    matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    matriceresu=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    try:
+        matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+        matriceresu=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    except:
+        printLogs("Les matrices EDF et resu ne sont pas chargées")
+
     i=0
     for id in EDFList:
 
@@ -63,7 +89,6 @@ def UN():
     return
 
 def AN():    
-    os.chdir(file)
 
     EDFList=glob.glob("*.EDF")
     resuList=glob.glob("*.resu")
@@ -72,7 +97,12 @@ def AN():
     print(EDFList)
 
     test=FirstLineEDF(EDFData)
-    test1=FirstLineresu(resuData)
+
+    try:
+        test1=FirstLineresu(resuData)
+    except:
+        printLogs("Problème chargement resuData")
+
     if test and test1:
         ID = 1
     else :
@@ -83,7 +113,11 @@ def AN():
         
         #1. récupérer edfname
         print(resu)
-        fid = open(resu, "rb")                                                   
+        try:
+            fid = open(resu, "rb")
+        except:
+            printLogs("Problème ouverture resu") 
+
         fid.seek(144)
         RawFileName= fid.read(22).decode('unicode_escape')
         RawFileNameStrip=RawFileName.replace(" ","")
@@ -100,8 +134,17 @@ def AN():
         #4 Anonymise edf et resu (nom et données)
         print(RawFileNameStripTerm)
         print(resu)
-        AnonymiseEDF(RawFileNameStripTerm)
-        AnonymiseResu(resu)
+
+        try:
+            AnonymiseEDF(RawFileNameStripTerm)
+        except:
+            printLogs("Problème anonymisation EDF")
+        
+        try:
+            AnonymiseResu(resu)
+        except:
+            printLogs("Problème anonymisation resu")
+
         anonymeNames=ChangeNameToAnonyme(resu,RawFileNameStripTerm,ID)
 
         #5 incrémenter l'ID
@@ -114,27 +157,5 @@ if (args.unAnomyse):
 
 elif(args.anomyse):
     AN()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
 
 
