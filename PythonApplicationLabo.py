@@ -62,6 +62,9 @@ def UN():
         EDFAnonymeName=EDFAnonymeName.replace(".EDF","")
         IDFichierAnonyme=EDFAnonymeName[10:]
         #2 voir où se trouve le fichier dans datafile
+        print(IDFichierAnonyme)
+        print(matriceEDF)
+        
         pos=CheckInDataFile(matriceEDF,IDFichierAnonyme)
         
         
