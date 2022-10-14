@@ -1,6 +1,6 @@
 import argparse
 from datetime import datetime
-
+import glob
 def initLogs(logs):
     global logName
     if (logs):
@@ -46,3 +46,23 @@ def parseArguments():
     parser.add_argument("-em", "--emg", required=False,help="Emg channel name")
     args = parser.parse_args()
     return args
+
+
+
+def checkAnonymisation() :
+    EDFListRef=glob.glob("*.EDF")
+    EDFListNew=glob.glob("New/*.EDF")
+    resuListNew=glob.glob("New/*.resu")  
+    resuListRef=glob.glob("*.resu") 
+
+    for edfRef in EDFListRef:
+        fid = open(edfRef, "rb")
+        stringRef = fid.read()    
+        fid.close()
+        fid = open("New/" + edfRef.upper(), "rb")
+        stringNew = fid.read()    
+        fid.close()
+        if stringRef != stringNew:
+            print("diff avec " + edfRef)
+    return
+
