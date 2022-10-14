@@ -44,8 +44,8 @@ else:
 
 #6 unanonymiser edf et resu (nom et données)
 def UN():    
-    EDFList=glob.glob("*.EDF")
-    resuList=glob.glob("*.resu")
+    EDFList=glob.glob("RawAnonyme*.EDF")
+    resuList=glob.glob("resuAnonyme*.resu")
 
     try:
         matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
@@ -179,7 +179,7 @@ def UnAnonymiseEDF(EDFName,matriceEDF,a):
         EDF = open(EDFName, "r+")
     except:
         printLogs("Problème ouverture fichier EDF")
-    A = [8,80,160]
+    A = [8,88,168]
     for i in range(len(A)):
         EDF.seek(A[i])
         EDF.write(matriceEDF[a][i+1])
@@ -288,9 +288,10 @@ def saveDataEDF(RawFileName, EDFData,ID):
         EDFText = EDF.read(168).decode('unicode_escape')    
         EDF.close()
         dataFile.write(EDFText[0:80])
+        dataFile.write('\t')
         dataFile.write(EDFText[80:160])
         dataFile.write('\t')
-        dataFile.write(EDFText[152:168])
+        dataFile.write(EDFText[160:168])
         dataFile.write('\t')
         dataFile.write(str(ID))
         dataFile.write('\n')
