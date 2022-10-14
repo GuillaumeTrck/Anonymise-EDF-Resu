@@ -44,8 +44,8 @@ else:
 
 #6 unanonymiser edf et resu (nom et données)
 def UN():    
-    EDFList=glob.glob("*.EDF")
-    resuList=glob.glob("*.resu")
+    EDFList=glob.glob("RawAnonyme*.EDF")
+    resuList=glob.glob("resuAnonyme*.resu")
 
     try:
         matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
@@ -54,16 +54,16 @@ def UN():
         printLogs("Les matrices EDF et resu ne sont pas chargées")
 
     
-    for i in range(len(EDFList)):
+    for i in range(len(resuList)):
 
         #1 récupérer ID du fichier
         
         
-        EDFAnonymeName=EDFList[i]
-        EDFAnonymeName=EDFAnonymeName.replace(".EDF","")
-        IDFichierAnonyme=EDFAnonymeName[10:]
+        resuAnonymeName=resuList[i]
+        resuAnonymeName=resuAnonymeName.replace(".resu","")
+        IDFichierAnonyme=resuAnonymeName[11:]
         #2 voir où se trouve le fichier dans datafile
-        pos=CheckInDataFile(matriceEDF,IDFichierAnonyme)
+        pos=CheckInDataFile(matriceresu,IDFichierAnonyme)
         
         
         #3 changer les noms anonymes et les données des edf et resu
@@ -74,6 +74,7 @@ def UN():
         print(originalEDFName)
         print(originalResuName)
         pos=int(pos)
+        print(pos)
         originalsNames=ChangeAnonymeToName(originalResuName[0],originalEDFName[0], matriceEDF,matriceresu,pos)
         UnAnonymiseEDF(originalsNames[1],matriceEDF,pos)
         UnAnonymiseResu(originalsNames[0],matriceresu,pos)
@@ -179,7 +180,7 @@ def UnAnonymiseEDF(EDFName,matriceEDF,a):
         EDF = open(EDFName, "r+")
     except:
         printLogs("Problème ouverture fichier EDF")
-    A = [8,80,160]
+    A = [8,88,168]
     for i in range(len(A)):
         EDF.seek(A[i])
         EDF.write(matriceEDF[a][i+1])
@@ -288,9 +289,10 @@ def saveDataEDF(RawFileName, EDFData,ID):
         EDFText = EDF.read(168).decode('unicode_escape')    
         EDF.close()
         dataFile.write(EDFText[0:80])
+        dataFile.write('\t')
         dataFile.write(EDFText[80:160])
         dataFile.write('\t')
-        dataFile.write(EDFText[152:168])
+        dataFile.write(EDFText[160:168])
         dataFile.write('\t')
         dataFile.write(str(ID))
         dataFile.write('\n')
@@ -340,7 +342,7 @@ def FirstLineresu(resuData):
 
 def CheckID(EDFData,resuData):
 
-    matriceEDFID=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=3,ndmin=2)
+    matriceEDFID=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=4,ndmin=2)
     EDFID = int(max(matriceEDFID) +1)
 
     matriceresuID=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=9,ndmin=2)
@@ -370,8 +372,8 @@ def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu,i) :
 
     return [resuFileName,EDFFileName] 
 
-def CheckInDataFile(matriceEDF,IDFichierAnonyme):
-    i=np.where(matriceEDF==IDFichierAnonyme)
+def CheckInDataFile(matriceresu,IDFichierAnonyme):
+    i=np.where(matriceresu==IDFichierAnonyme)
     #print("i= {}".format(i))
     return i[0]
 
