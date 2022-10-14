@@ -63,7 +63,8 @@ def UN():
         resuAnonymeName=resuAnonymeName.replace(".resu","")
         IDFichierAnonyme=resuAnonymeName[11:]
         #2 voir où se trouve le fichier dans datafile
-        pos=CheckInDataFile(matriceresu,IDFichierAnonyme)
+        posEDF=CheckInDataFile(matriceEDF,IDFichierAnonyme)
+        posResu=CheckInDataFile(matriceresu,IDFichierAnonyme)
         
         
         #3 changer les noms anonymes et les données des edf et resu
@@ -73,12 +74,15 @@ def UN():
         originalResuName=glob.glob('resuAnonyme'+IDFichierAnonyme+terminaisonResu)
         print(originalEDFName)
         print(originalResuName)
-        pos=int(pos)
-        print(pos)
-        originalsNames=ChangeAnonymeToName(originalResuName[0],originalEDFName[0], matriceEDF,matriceresu,pos)
-        UnAnonymiseEDF(originalsNames[1],matriceEDF,pos)
-        UnAnonymiseResu(originalsNames[0],matriceresu,pos)
-        pos=int(pos)
+        posEDF=int(posEDF)
+        print(posEDF)
+        posResu=int(posResu)
+        print(posResu)
+        originalsNames=ChangeAnonymeToName(originalResuName[0],originalEDFName[0], matriceEDF,matriceresu,posResu, posEDF)
+        UnAnonymiseEDF(originalsNames[1],matriceEDF,posEDF)
+        UnAnonymiseResu(originalsNames[0],matriceresu,posResu)
+        posEDF=int(posEDF)
+        posResu=int(posResu)
     return
 
 def AN():    
@@ -119,27 +123,25 @@ def AN():
             term='.EDF'
             RawFileNameStripTerm=RawFileNameStrip + term
             EDFName=glob.glob(RawFileNameStripTerm)
-            print(EDFName)
-            #3 savedataedf
-            saveDataEDF(RawFileNameStripTerm,EDFData,ID)
-        
-            #4 Anonymise edf et resu (nom et données)
+            if EDFName:
+                #3 savedataedf
+                saveDataEDF(RawFileNameStripTerm,EDFData,ID)
+                #4 Anonymise edf et resu (nom et données)
+                try:
+                    AnonymiseEDF(RawFileNameStripTerm)
+                except:
+                    printLogs("Problème anonymisation EDF")
+                try:
+                    AnonymiseResu(resu)
+                except:
+                    printLogs("Problème anonymisation resu")
 
-            try:
-                AnonymiseEDF(RawFileNameStripTerm)
-            except:
-                printLogs("Problème anonymisation EDF")
-            
-            try:
-                AnonymiseResu(resu)
-            except:
-                printLogs("Problème anonymisation resu")
-
-            anonymeNames=ChangeNameToAnonyme(resu,RawFileNameStripTerm,ID)
+                anonymeNames=ChangeNameToAnonyme(resu,RawFileNameStripTerm,ID)
+            else : 
+                printLogs("Pas de fichier EDF associé à ce resu.")
             #5 incrémenter l'ID
             ID=int(ID)
             ID=ID+1
-        
     return
 
 def AnonymiseEDF(EDFName):                                 
@@ -364,16 +366,16 @@ def ChangeNameToAnonyme(resuName, rawFileName, ID):
         print("J'ai bien changé le nom")
     return [resuAnonymeFileName,rawAnonymeFileName]
 
-def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu,i) :
-    resuFileName=matriceresu[i][0]
+def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu,iResu,iEDF) :
+    resuFileName=matriceresu[iResu][0]
     os.rename(resuAnonyme,resuFileName)
-    EDFFileName=matriceEDF[i][0]
+    EDFFileName=matriceEDF[iEDF][0]
     os.rename(rawAnonyme,EDFFileName)
 
     return [resuFileName,EDFFileName] 
 
-def CheckInDataFile(matriceresu,IDFichierAnonyme):
-    i=np.where(matriceresu==IDFichierAnonyme)
+def CheckInDataFile(matriceData,IDFichierAnonyme):
+    i=np.where(matriceData==IDFichierAnonyme)
     #print("i= {}".format(i))
     return i[0]
 
