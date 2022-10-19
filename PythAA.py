@@ -34,14 +34,11 @@ def AA(resuName, EDFName):
              printLogs("readEDF() ok")
     elif header['version'] == '0-1     ' : # Compressed EDF
         printLogs("Decompression is needed")
-        newEDFName = 'x' + EDFName
-        try :
-            unzipEDF(EDFName, newEDFName, header)
-        except: 
-            printLogs("Error with unzipEDF(). End of the procedure.")
-            return
-        else: 
-            printLogs("unzipEDF() ok")
+        newEDFName = os.path.dirname(EDFName) + '\\x' + os.path.basename(EDFName)
+        print(newEDFName)
+        unzipEDF(EDFName, newEDFName, header)
+        printLogs("Error with unzipEDF(). End of the procedure.")
+        printLogs("unzipEDF() ok")
         try: 
             raw = readEDF(newEDFName)
         except:
@@ -50,12 +47,12 @@ def AA(resuName, EDFName):
         else: 
             printLogs("readEDF() ok")  
         
-        try :
-            os.remove(newEDFName)
-        except: 
-            printLogs("Error while removing " + newEDFName+". But the procedure goes on")
-        else: 
-            printLogs(newEDFName + " has been removed")    
+        #try :
+            #os.remove(newEDFName)
+        #except: 
+         #   printLogs("Error while removing " + newEDFName+". But the procedure goes on")
+        #else: 
+         #   printLogs(newEDFName + " has been removed")    
     else : 
         printLogs("Unknown version format. End of the procedure") 
         return
@@ -129,4 +126,4 @@ args = parseArguments()
 initLogs(args.logs)
 printLogs("AA - EDFName = " + args.edf + ", ResuName = " + args.edf +"\n")
 if (args.stages):
-    AA(args.edf, args.resu)
+    AA(args.resu, args.edf)
