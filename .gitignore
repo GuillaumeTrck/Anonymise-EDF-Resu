@@ -2,8 +2,9 @@ __pycache__/*
 .vs/*
 .vscode/*
 .build/*
-.Deepsleepgit a/
+.Deepsleepgit
 logs.txt
+LogsAnonyme.txt
 Anonym.txt
 *.edf
 *.EDF
