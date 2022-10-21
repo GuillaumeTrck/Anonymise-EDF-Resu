@@ -44,6 +44,7 @@ def parseArguments():
     parser.add_argument("-eo", "--eog", required=False,help="Eog channel name")
     parser.add_argument("-ee", "--eeg", required=False,help="Eeg channel name")
     parser.add_argument("-em", "--emg", required=False,help="Emg channel name")
+    parser.add_argument("-ar", "--arousal", required=False,action="store_true",help="Activation of arousal analysis")
     args = parser.parse_args()
     return args
 

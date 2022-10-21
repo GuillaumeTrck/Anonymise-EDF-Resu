@@ -75,11 +75,12 @@ if __name__ == '__main__':
     for the_id in sys.argv[1:]:
 
         the_id=os.path.basename(the_id)
+        print(the_id)
         
  
         # image_raw: pad to 8M; image_ori: resize & shift; image: prediction input
         #image_raw = import_signals(the_id + '.mat') # PARAMETER
-        image_raw = readEDF("PM807100.EDF")
+        image_raw = readEDF(the_id)
         
         d0=image_raw.shape[0]
         d1=image_raw.shape[1]
@@ -104,22 +105,32 @@ if __name__ == '__main__':
             j+=1
     
         image_ori=np.roll(image_ori,shift,axis=1)
+        print("imageori.shape" +str(image_ori.shape))
     
-        index1=np.arange(7)
-        index2=np.arange(2)+8
-        index3=np.array([7,10,12])
+        index1=np.arange(7) #entre les channels 0 et 6 
+        print(index1)
+        index2=np.arange(2)+8 #entre channels 8 et 9
+        print(index2)
+        index3=np.array([7,10,12]) #entres channels 7,10,12
+        print("index 3"+str(index3))
     
         j=0
         while (j<num_augtest):
             np.random.shuffle(index1)
+            print(index1)
             np.random.shuffle(index2)
+            print("shuffle2" +str(index2))
             index=np.concatenate((index1[0:1],index2[0:1],index3))
-    
+            print("imageori.shape" +str(image_ori.shape))
+            print(index)
             image = image_ori[index,:]
             input_pred=np.reshape(image.T,(batch,size1,num_channel))
     
             output1 = model01.predict(input_pred)
+            print("premiershapeoutput1"+str(output1.shape))
             output1=np.reshape(output1,(size1*batch))
+            print(output1.shape)
+            print(output1)
             print(np.mean(output1))
 
             output=output1
@@ -136,11 +147,14 @@ if __name__ == '__main__':
             output_new1=np.repeat(output_new1,2)
             j+=1
         output_all0=output_new1[shift*scale_pool:(shift*scale_pool+d1)]
+        print("output"+str(output_all0))
+        print(np.mean(output_all0))
 
         ## 3. stack & write ##############################################
     
         output_final=output_all0
-        print(output_final)
+        print("outputfinal"+str(output_final))
+        print(output_final.shape) #valeurs contenues dans le fichier vec 
 
 
         if(write_vec):
@@ -148,11 +162,10 @@ if __name__ == '__main__':
             vec = open(the_id + '.vec', 'w')
             for item in output_final:
                 #vec.write("%.4f\n" % item)
-                vec.write("%.3f\n" % item)
+                vec.write("%.3f\n" % item) #permet de ne pas afficher toutes les décimales
             vec.close()
         pass
         
         ###################################################################
-
 
 
