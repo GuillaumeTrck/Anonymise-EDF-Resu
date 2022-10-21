@@ -2,7 +2,8 @@
 /vs
 /vscode
 /build
-/Deepsleepgit
+/Deepsleep
+
 logs.txt
 LogsAnonyme.txt
 Anonym.txt
@@ -15,5 +16,5 @@ Anonym.spec
 test2.txt
 test3.txt
 test4.txt
-Deepsleep/
-*.npy
+test.py 
+test2.py
