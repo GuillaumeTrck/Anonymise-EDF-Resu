@@ -7,17 +7,17 @@ from keras import backend as K
 import tensorflow as tf
 import keras
 import h5py
-from Testuniform import readEDF
-import unet0 
-from Testpredict import *
+from utils import initPaths
+from edf import readEDF
+sys.path.insert(1, 'DeepSleep')
+import unet0
 
-print("|-------------------------------------------------NEW TEST---------------------------------------------------------------------------|")
+
+print("|-------------------------------------------------Predict---------------------------------------------------------------------------|")
+
+
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
-
-
-
-
 
 def anchor (ref, ori): # input m*n np array
     d0=ori.shape[0]
@@ -54,9 +54,9 @@ num_augtest=1
 
 if __name__ == '__main__':
 
-   
+
     ref555=np.load('ref555.npy')    
-    path1='./data/training/' # PARAMETER
+    path1='./dataEDF/training/' # PARAMETER
 
     # 0. reso full
     model01 = unet0.get_unet()
@@ -77,7 +77,7 @@ if __name__ == '__main__':
         the_id=os.path.basename(the_id)
         print(the_id)
         
- 
+
         # image_raw: pad to 8M; image_ori: resize & shift; image: prediction input
         #image_raw = import_signals(the_id + '.mat') # PARAMETER
         image_raw = readEDF(the_id)
@@ -167,5 +167,3 @@ if __name__ == '__main__':
         pass
         
         ###################################################################
-
-
