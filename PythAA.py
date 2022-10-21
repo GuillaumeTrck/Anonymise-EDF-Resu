@@ -11,8 +11,9 @@ from resu import *
 import sys
 import os
 from datetime import datetime
-from utils import *
+from utils import * 
 from Testuniform import uniformEDF
+from Testpredict import predictEDF
 #from Testpredict import predictEDF
     
 def AA(args):
@@ -151,7 +152,7 @@ def AA(args):
             print(a.shape)
 
             #Predict
-            
+            b= predictEDF()
 
 
 
