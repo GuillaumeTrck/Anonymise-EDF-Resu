@@ -12,11 +12,8 @@ import sys
 import os
 from datetime import datetime
 from utils import *
-from Testuniformcopy import uniformEDF
-#sys.path.append('/PythonApplicationLabo/DeepSleep')
-#from PythonApplicationLabo.DeepSleep import Testuniform
-
-
+from Testuniform import uniformEDF
+#from Testpredict import predictEDF
     
 def AA(args):
     # 1.Reading header
@@ -130,10 +127,12 @@ def AA(args):
                 resu['stages'] = resu['stages'][:-1]
             saveResu(resu, args.resu)
             return
-
+        StageAA=StagesAnalysis(resu,raw)
     #select chanels for arousals analysis
     elif(args.arousal):
-        def ArousalAnalysis(resu,raw): 
+        def ArousalAnalysis(raw):
+
+            #Uniform 
             chanels=[]
             if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' in header['labels']:
                 chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG')
@@ -142,17 +141,27 @@ def AA(args):
             else : 
                 printLogs("Prob chanels for arousal analysis")
             
-                raw.pick_channels(chanels)
-                info = raw.info
-                print(info)
-                print(info['ch_names'])
-                new_raw=raw.get_data()
-                print("info raw" +str(new_raw.shape))
-                a = uniformEDF(new_raw)
-                print(a.shape)
-            return
+            raw.pick_channels(chanels)
+            info = raw.info
+            print(info)
+            print(info['ch_names'])
+            new_raw=raw.get_data()
+            print("info raw" +str(new_raw.shape))
+            a = uniformEDF(new_raw)
+            print(a.shape)
 
+            #Predict
+            
+
+
+
+
+            return
+        ArousalAA=ArousalAnalysis(raw)
+
+         
 args = parseArguments()
+initPaths(__file__)
 initLogs(args.logs)
 printLogs("AA - EDFName = " + args.edf + ", ResuName = " + args.resu +"\n")
 if (args.stages):
