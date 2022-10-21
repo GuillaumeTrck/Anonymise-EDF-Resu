@@ -1,6 +1,7 @@
 import argparse
 from datetime import datetime
 import glob
+import os
 def initLogs(logs):
     global logName
     if (logs):
@@ -30,10 +31,6 @@ def printLogs(txt):
     print(txt)
     return
             
-
-
-
-
 def parseArguments(): 
     parser = argparse.ArgumentParser()
     parser.add_argument("-e", "--edf", required=True, help="Edf file name")
@@ -48,7 +45,12 @@ def parseArguments():
     args = parser.parse_args()
     return args
 
-
+def initPaths(mainFile):
+    CURRENT_PATH = os.path.dirname(os.path.realpath(mainFile))
+    DEEPSLEEP_PATH = os.path.join(CURRENT_PATH, 'DeepSleep')
+    print(CURRENT_PATH)
+    print(DEEPSLEEP_PATH)
+    return
 
 def checkAnonymisation() :
     EDFListRef=glob.glob("*.EDF")
