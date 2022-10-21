@@ -46,10 +46,19 @@ def parseArguments():
     return args
 
 def initPaths(mainFile):
+    global CURRENT_PATH
+    global DEEPSLEEP_PATH
+    global DATA_PATH
+    global FEATURE_PATH
+    global TRAINING_PATH
+    
     CURRENT_PATH = os.path.dirname(os.path.realpath(mainFile))
+
+    #For Testpredict.py
     DEEPSLEEP_PATH = os.path.join(CURRENT_PATH, 'DeepSleep')
-    print(CURRENT_PATH)
-    print(DEEPSLEEP_PATH)
+    DATA_PATH = os.path.join(DEEPSLEEP_PATH, 'dataEDF')
+    FEATURE_PATH = os.path.join(DATA_PATH, 'featureEDF_8m')
+    TRAINING_PATH=os.path.join(DATA_PATH, 'training')
     return
 
 def checkAnonymisation() :
