@@ -9,8 +9,8 @@ import keras
 import h5py
 from utils import initPaths
 from edf import readEDF
-sys.path.insert(1, 'DeepSleep')
-import unet0
+import utils as u
+import Deepsleep.unet0
 
 
 print("|-------------------------------------------------Predict---------------------------------------------------------------------------|")
@@ -51,16 +51,15 @@ num_augtest=1
 
 ################################
 
+def predictEDF():
 
-if __name__ == '__main__':
-
-
-    ref555=np.load('ref555.npy')    
-    path1='./dataEDF/training/' # PARAMETER
+    ref555=np.load(os.path.join(u.DEEPSLEEP_PATH,'ref555.npy'))    
+    path1=u.TRAINING_PATH # PARAMETER
 
     # 0. reso full
-    model01 = unet0.get_unet()
-    model01.load_weights('weights_01.h5')
+    print(os.getcwd())
+    model01 = Deepsleep.unet0.get_unet()
+    model01.load_weights(os.path.join(u.DEEPSLEEP_PATH,'weights_01.h5'))
     
 
 
@@ -167,3 +166,4 @@ if __name__ == '__main__':
         pass
         
         ###################################################################
+    return 
