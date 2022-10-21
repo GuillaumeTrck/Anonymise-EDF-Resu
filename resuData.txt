@@ -1,5 +1,0 @@
-resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID
-PERSMAE0-20221007.resu	07/10/2022	918 	PM807100              	010101FP01            	PERSONNE                   	MAE                        	01/01/2001	F	1
-PERSMAE0-20221007.resu	07/10/2022	918 	PM807100              	010101FP01            	PERSONNE                   	MAE                        	01/01/2001	F	2
-PERSMAE0-20221007.resu	07/10/2022	918 	PM807100              	010101FP01            	PERSONNE                   	MAE                        	01/01/2001	F	3
-PERSMAE0-20221007.resu	07/10/2022	918 	PM807100              	010101FP01            	PERSONNE                   	MAE                        	01/01/2001	F	4
