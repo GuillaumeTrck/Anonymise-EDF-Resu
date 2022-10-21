@@ -20,13 +20,20 @@ print("|-------------------------------------------------Predict----------------
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 
 def anchor (ref, ori): # input m*n np array
+    print("ori"+str(ori.shape))
+    print("ref"+str(ref.shape))
     d0=ori.shape[0]
+    print(d0)
     s1=float(ref.shape[1]) # size in
     s2=float(ori.shape[1]) # size out
+    
     ori_new=ori.copy()
+    print(ori_new.shape)
     for i in range(d0):
-        tmp=np.interp(np.arange(s2)/(s2-1)*(s1-1), np.arange(s1), ref[i,:]) 
+        tmp=np.interp(np.arange(s2)/(s2-1)*(s1-1), np.arange(s1), ref[i,:])
+        print("tmp"+str(tmp.shape)) 
         ori_new[i,np.argsort(ori[i,:])]=tmp
+        print(tmp.shape)
     return ori_new
 
 def pool_avg_2(input,if_mask=False):
@@ -51,7 +58,7 @@ num_augtest=1
 
 ################################
 
-def predictEDF():
+def predictEDF(raw):
 
     ref555=np.load(os.path.join(u.DEEPSLEEP_PATH,'ref555.npy'))    
     path1=u.TRAINING_PATH # PARAMETER
@@ -73,13 +80,12 @@ def predictEDF():
 
     for the_id in sys.argv[1:]:
 
-        the_id=os.path.basename(the_id)
-        print(the_id)
-        
+        the_id=os.path.join(u.TRAINING_PATH,'RM431010.edf')
 
         # image_raw: pad to 8M; image_ori: resize & shift; image: prediction input
         #image_raw = import_signals(the_id + '.mat') # PARAMETER
-        image_raw = readEDF(the_id)
+        image_raw = raw
+        print(image_raw)
         
         d0=image_raw.shape[0]
         d1=image_raw.shape[1]

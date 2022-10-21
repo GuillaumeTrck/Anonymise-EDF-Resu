@@ -152,7 +152,7 @@ def AA(args):
             print(a.shape)
 
             #Predict
-            b= predictEDF()
+            b= predictEDF(a)
 
 
 
