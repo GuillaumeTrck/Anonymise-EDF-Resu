@@ -1,11 +1,14 @@
 import numpy as np
 import os
+import utils as u
+
+#print(u.FEATURE_PATH)
 
 print("--------------------------------------------------NEW TEST----------------------------------------------------------------------------")
 
 def uniformEDF(raw):
-    print(raw.shape)
-    path2='./DeepSleep/dataEDF/featureEDF_8m/'
+    path2=u.FEATURE_PATH 
+    print(path2)
 
     os.makedirs(path2, exist_ok=True)
 
