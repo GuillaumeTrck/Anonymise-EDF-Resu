@@ -1,8 +1,8 @@
-__pycache__/*
-.vs/*
-.vscode/*
-.build/*
-.Deepsleepgit
+/__pycache__
+/vs
+/vscode
+/build
+/Deepsleepgit
 logs.txt
 LogsAnonyme.txt
 Anonym.txt
