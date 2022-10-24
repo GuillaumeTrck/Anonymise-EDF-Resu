@@ -69,7 +69,12 @@ def AA(args):
 
     # 4.Selecting channels stages
     if (args.stages):
-        def StagesAnalysis(resu,raw):
+        StageAA=StagesAnalysis(resu,raw,header)
+    #select chanels for arousals analysis
+    elif(args.arousal):
+        ArousalAA=ArousalAnalysis(raw,header)
+
+def StagesAnalysis(resu,raw,header):
             if 'EEG C4'in header['labels']:
                 printLogs("EEG C4 selected")
                 EEGChan = 'EEG C4' 
@@ -128,15 +133,13 @@ def AA(args):
                 resu['stages'] = resu['stages'][:-1]
             saveResu(resu, args.resu)
             return
-        StageAA=StagesAnalysis(resu,raw)
-    #select chanels for arousals analysis
-    elif(args.arousal):
-        def ArousalAnalysis(raw):
 
+def ArousalAnalysis(raw,header):
+            print(header['labels'])
             #Uniform 
             chanels=[]
-            if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' in header['labels']:
-                chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG')
+            if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' and 'Frq.car.' and 'EMG jamb.1' and 'EMG jamb.2' in header['labels']:
+                chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG','Frq.car.','EMG jamb.1','EMG jamb.2')
                 printLogs("All chanels for arousal analysis selected")
                 print (chanels[0:])
             else : 
@@ -152,15 +155,11 @@ def AA(args):
             print(a.shape)
 
             #Predict
-            b= predictEDF(a)
-
-
-
-
+            b= predictEDF(a,args.edf)
             return
-        ArousalAA=ArousalAnalysis(raw)
+            
 
-         
+
 args = parseArguments()
 initPaths(__file__)
 initLogs(args.logs)
