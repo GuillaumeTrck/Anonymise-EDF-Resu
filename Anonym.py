@@ -151,7 +151,10 @@ def AnonymiseEDF(EDFName):
     else:
         EDF = open(EDFName, "r+")
         EDF.seek(8)                                             
-        sss = "x" * 168
+        sss = "x" * 160
+        EDF.write(sss)
+        EDF.seek(160)
+        sss = "00/00/00"
         EDF.write(sss)
         EDF.close()
     return 
@@ -163,16 +166,25 @@ def AnonymiseResu(resuName):
     else:
         resu=open(resuName,'r+')
         resu.seek(24)                                           
-        sss = "x"*10
+        sss = "00/00/0000"
         resu.write(sss)
         resu.seek(48)                                         
-        sss="x"*4
+        sss="0000"*4
         resu.write(sss)
         resu.seek(144)
         sss = "x" * 22
         resu.write(sss)
         resu.seek(1922)
-        sss = "x" * 87
+        sss = "0" * 22
+        resu.write(sss)
+        resu.seek(1944)
+        sss = "x" * 54
+        resu.write(sss)
+        resu.seek(1998)
+        sss = "00/00/0000"
+        resu.write(sss)
+        resu.seek(2008)
+        sss = "x" * 11
         resu.write(sss)
         resu.close()
     return      
@@ -255,6 +267,7 @@ def saveDataresu(resuName,resuData,ID):
         dataFile.write('\t')
         resu['Sex'] = fid.read(1).decode('unicode_escape')
         dataFile.write(resu['Sex'])
+        print(resu['Sex'])
         dataFile.write('\t')
         dataFile.write(str(ID))
         dataFile.write('\n')
