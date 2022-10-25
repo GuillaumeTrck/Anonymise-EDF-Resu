@@ -20,8 +20,8 @@ def AA(args):
     # 1.Reading header
     try :
         header = readEDFHeader(args.edf)  
-    except : 
-        printLogs("Error with readEDFHeader(). End of the procedure.")
+    except Exception as e: 
+        printLogs("Error with readEDFHeader() : " + str(e)+ "\nEnd of the procedure.")
         return
     else :
         printLogs("readEDFHeader() ok")
@@ -30,41 +30,45 @@ def AA(args):
         printLogs("Version 0. No Decompression needed")
         try :
             raw = readEDF(args.edf)
-        except : 
-            printLogs("Error with readEDF(). End of the procedure.")
+        except Exception as e: 
+            printLogs("Error with regular readEDF() : " + str(e) + "\nEnd of the procedure.")
             return
         else :
              printLogs("readEDF() ok")
     elif header['version'] == '0-1     ' : # Compressed EDF
         printLogs("Decompression is needed")
         newEDFName = os.path.dirname(args.edf) + '\\x' + os.path.basename(args.edf)
-        unzipEDF(args.edf, newEDFName, header)
-        printLogs("Error with unzipEDF(). End of the procedure.")
-        printLogs("unzipEDF() ok")
+        print(newEDFName)
+        try:
+            unzipEDF(args.edf, newEDFName, header)
+        except Exception as e:
+            printLogs("Error with unzipEDF() : " + str(e) +"\nEnd of the procedure.")
+        else:
+            printLogs("unzipEDF() ok")
         try: 
             raw = readEDF(newEDFName)
-        except:
-            printLogs("Error with readEDF(). End of the procedure.")
+        except Exception as e:
+            printLogs("Error with unzipped readEDF(): " + str(e) + "\nEnd of the procedure.")
             return 
         else: 
             printLogs("readEDF() ok")  
         
         try :
             os.remove(newEDFName)
-        except: 
-           printLogs("Error while removing " + newEDFName+". But the procedure goes on")
+        except Exception as e: 
+           printLogs("Error while removing " + newEDFName + " : " + str(e) + "\nBut the procedure goes on")
         else: 
            printLogs(newEDFName + " has been removed")    
     else : 
         printLogs("Unknown version format. End of the procedure") 
         return
     # 3.Reading resu
-    # try:
-    resu = readResu(args.resu)    
-    # except: 
-    #     printLogs("Error with readResu(). End of the procedure")
-    # else: 
-    #     printLogs("readResu() ok")
+    try:
+        resu = readResu(args.resu)    
+    except Exception as e: 
+        printLogs("Error with readResu(): " + str(e) + "\nEnd of the procedure")
+    else: 
+        printLogs("readResu() ok")
 
     # 4.Selecting channels stages
     if (args.stages):
@@ -72,6 +76,7 @@ def AA(args):
     #select chanels for arousals analysis
     elif(args.arousal):
         ArousalAA=ArousalAnalysis(raw,header)
+    return 
 
 def StagesAnalysis(resu,raw,header):
             if 'EEG C4'in header['labels']:
@@ -119,8 +124,9 @@ def StagesAnalysis(resu,raw,header):
             try : 
                 sls = yasa.SleepStaging(raw, eeg_name=EEGChan, eog_name=EOGChan, emg_name=EMGChan)
                 y_pred = sls.predict()
-            except :
-                printLogs("Erreur durant l'analyse par yasa") 
+            except Exception as e:
+                printLogs("Erreur durant l'analyse par yasa : " + str(e) + "\nEnd of the procedure.") 
+                return
             else : 
                 printLogs("AA terminée. Il reste à sauvegarder le fichier résumé")
             confidence = sls.predict_proba().max(1)
