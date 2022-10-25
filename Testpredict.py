@@ -20,6 +20,7 @@ print("|-------------------------------------------------Predict----------------
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 
+#TODO check anchor pour eviter de devoir absolument charger 13 channels
 def anchor (ref, ori): # input m*n np array
     # print("ori"+str(ori.shape))
     # print("ref"+str(ref.shape))

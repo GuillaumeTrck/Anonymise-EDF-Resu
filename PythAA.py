@@ -38,7 +38,6 @@ def AA(args):
     elif header['version'] == '0-1     ' : # Compressed EDF
         printLogs("Decompression is needed")
         newEDFName = os.path.dirname(args.edf) + '\\x' + os.path.basename(args.edf)
-        print(newEDFName)
         unzipEDF(args.edf, newEDFName, header)
         printLogs("Error with unzipEDF(). End of the procedure.")
         printLogs("unzipEDF() ok")
@@ -50,22 +49,22 @@ def AA(args):
         else: 
             printLogs("readEDF() ok")  
         
-        #try :
-            #os.remove(newEDFName)
-        #except: 
-         #   printLogs("Error while removing " + newEDFName+". But the procedure goes on")
-        #else: 
-         #   printLogs(newEDFName + " has been removed")    
+        try :
+            os.remove(newEDFName)
+        except: 
+           printLogs("Error while removing " + newEDFName+". But the procedure goes on")
+        else: 
+           printLogs(newEDFName + " has been removed")    
     else : 
         printLogs("Unknown version format. End of the procedure") 
         return
     # 3.Reading resu
-    try:
-        resu = readResu(args.resu)    
-    except: 
-        printLogs("Error with readResu(). End of the procedure")
-    else: 
-        printLogs("readResu() ok")
+    # try:
+    resu = readResu(args.resu)    
+    # except: 
+    #     printLogs("Error with readResu(). End of the procedure")
+    # else: 
+    #     printLogs("readResu() ok")
 
     # 4.Selecting channels stages
     if (args.stages):
@@ -164,6 +163,7 @@ args = parseArguments()
 initPaths(__file__)
 initLogs(args.logs)
 printLogs("AA - EDFName = " + args.edf + ", ResuName = " + args.resu +"\n")
+BB=AA(args)
 if (args.stages):
     AA(args)
 elif(args.arousal):

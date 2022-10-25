@@ -69,7 +69,7 @@ def readResu(resuName):
     resu['Free2'] =  fid.read(24)
     resu['Free3'] =  fid.read(24)
     resu['Free4'] =  fid.read(24)
-    resu['Flags'] =  fid.read(384)
+    resu['Flags'] =  fid.read(384) #648
     resu['SleepVar'] =  fid.read(1200)
     resu['Free6'] =  fid.read(72)
     resu['A'] =  fid.read(2)
@@ -235,8 +235,35 @@ def readResu(resuName):
             event.Area = 0
         Events.append(event)
     resu['Events'] = Events
-    return resu
+    
+    print("-----------------------------------------------Test Guillaume-------------------------------------------------------------")
+    #print(Events)
+    print(len(Events))
+    
+    eventSeven=filter(lambda event : event.type ==7, Events)
+    microEveil=filter(lambda event : event.sous_type == 1, eventSeven)
 
+    # for me in microEveil:
+    #     times=me.debut.temps
+
+
+
+
+    #print(type(microEveil))
+    
+    aaa=list(microEveil)
+    #print(aaa[0])
+    print("vecvec")
+    # vec = open("resu" + '.vec', 'a')
+    zeros=np.zeros((8388608,1),dtype=int)
+    np.savetxt('resu.vec',zeros,fmt='%i')
+    # for item in aaa:
+    #     print(type(aaa))
+    #     print(type(item))
+    #     vec.write(str(aaa[0])) 
+    #     vec.write("\n")
+    # vec.close()
+    return resu
 #Ev = a['Events']
 #print(Ev)
 #print(len(a['Events']))
@@ -252,6 +279,15 @@ def readResu(resuName):
 #a['Events'].sort(key=lambda e: e.reprise.temps)
 #print(a['Events'])
 #print(len(a['Events']))
+
+
+# a=readResu("TestTest//resuAnonyme7.resu")
+# a["Events"] = 0
+# print(a)
+# a=readResu("TestTest//ROSSMON0-20220131.resu")
+# a["Events"] = 0
+#print(a)
+
 def saveResu(resu, resuName):
     Mot = []
     nMots = 12

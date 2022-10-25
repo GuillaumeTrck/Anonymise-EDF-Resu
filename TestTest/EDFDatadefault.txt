@@ -1,0 +1,8 @@
+EDF/EDFHeader/champs identification/Date/ID
+RM431010.EDF	ROSSOMME##MONIQUE##650625FRAA                                                   	Erasme-ULB-Endymion##C03.56##20##25/06/1965##914##P9&10#202#                    	31/01/22	1
+RM431010.EDF	ROSSOMME##MONIQUE##650625FRAA                                                   	Erasme-ULB-Endymion##C03.56##20##25/06/1965##914##P9&10#202#                    	31/01/22	2
+RM431010.EDF	ROSSOMME##MONIQUE##650625FRAA                                                   	Erasme-ULB-Endymion##C03.56##20##25/06/1965##914##P9&10#202#                    	31/01/22	3
+RM431010.EDF	ROSSOMME##MONIQUE##650625FRAA                                                   	Erasme-ULB-Endymion##C03.56##20##25/06/1965##914##P9&10#202#                    	31/01/22	4
+RM431010.EDF	ROSSOMME##MONIQUE##650625FRAA                                                   	Erasme-ULB-Endymion##C03.56##20##25/06/1965##914##P9&10#202#                    	31/01/22	5
+RM431010.EDF	ROSSOMME##MONIQUE##650625FRAA                                                   	Erasme-ULB-Endymion##C03.56##20##25/06/1965##914##P9&10#202#                    	31/01/22	6
+RM431010.EDF	ROSSOMME##MONIQUE##650625FRAA                                                   	Erasme-ULB-Endymion##C03.56##20##25/06/1965##914##P9&10#202#                    	31/01/22	7
