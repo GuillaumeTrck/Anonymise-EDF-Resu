@@ -150,11 +150,21 @@ def AnonymiseEDF(EDFName):
         print("Fichier EDF déjà anonyme")
     else:
         EDF = open(EDFName, "r+")
-        EDF.seek(8)                                             
-        sss = "x" * 160
+        EDF.seek(8)                                            
+        sss = "x" * 8 + "##" + "xxxxxxxx" + "##"
         EDF.write(sss)
-        EDF.seek(160)
-        sss = "00/00/00"
+        EDF.seek(28)
+        sss = "010101MX00             "+" "*38 #22 carac en tout 
+        EDF.write(sss)
+        EDF.seek(88)
+        sss="Erasme-ULB-Endymion##C03.56##20##01/01/2001##000##P9&10#202#"
+        EDF.write(sss)
+
+        # EDF.seek(122)
+        # sss = "01/01/2001" + " "*36
+        
+        EDF.seek(168)
+        sss = "01/01/01"
         EDF.write(sss)
         EDF.close()
     return 
@@ -166,25 +176,25 @@ def AnonymiseResu(resuName):
     else:
         resu=open(resuName,'r+')
         resu.seek(24)                                           
-        sss = "00/00/0000"
+        sss = "01/01/2001"
         resu.write(sss)
         resu.seek(48)                                         
-        sss="0000"*4
+        sss="0000"
         resu.write(sss)
         resu.seek(144)
         sss = "x" * 22
         resu.write(sss)
         resu.seek(1922)
-        sss = "0" * 22
+        sss = "010101MX00" + " "*12
         resu.write(sss)
         resu.seek(1944)
         sss = "x" * 54
         resu.write(sss)
         resu.seek(1998)
-        sss = "00/00/0000"
+        sss = "01/01/2001"
         resu.write(sss)
         resu.seek(2008)
-        sss = "x" * 11
+        sss = "M" 
         resu.write(sss)
         resu.close()
     return      
@@ -267,7 +277,6 @@ def saveDataresu(resuName,resuData,ID):
         dataFile.write('\t')
         resu['Sex'] = fid.read(1).decode('unicode_escape')
         dataFile.write(resu['Sex'])
-        print(resu['Sex'])
         dataFile.write('\t')
         dataFile.write(str(ID))
         dataFile.write('\n')
