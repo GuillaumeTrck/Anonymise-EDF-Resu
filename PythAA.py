@@ -1,11 +1,11 @@
 OUTDATED_IGNORE=1
 import mne
-#import yasa
+import yasa
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-#from yasa.hypno import hypno_str_to_int_Erasme, hypno_upsample_to_data
+from yasa.hypno import hypno_str_to_int_Erasme, hypno_upsample_to_data
 from edf import *
 from resu import *
 import sys
