@@ -242,11 +242,26 @@ def readResu(resuName):
     
     eventSeven=filter(lambda event : event.type ==7, Events)
     microEveil=filter(lambda event : event.sous_type == 1, eventSeven)
-
-    # for me in microEveil:
-    #     times=me.debut.temps
-
-
+   
+    vec = open("resu" + '.vec', 'w')
+    zeros=np.zeros((8388608,1),dtype=int)
+    np.savetxt('resu.vec',zeros,fmt='%i')
+    vec.close()
+    vec = open("resu" + '.vec', 'r+',encoding='utf-8')
+    for me in microEveil:
+        t0=me.debut.temps
+        tf=me.fin.temps
+        print(t0)
+        print(tf)
+        # vec.seek(t0)
+        # vec.write('1').decode("UTF-8")
+        # print("----------------------")
+        abc=range(t0,tf)
+        vec.seek(t0)
+        for i in abc:
+            vec.write("1")
+            vec.write('\n')
+        
 
 
     #print(type(microEveil))
@@ -254,15 +269,9 @@ def readResu(resuName):
     aaa=list(microEveil)
     #print(aaa[0])
     print("vecvec")
-    # vec = open("resu" + '.vec', 'a')
-    zeros=np.zeros((8388608,1),dtype=int)
-    np.savetxt('resu.vec',zeros,fmt='%i')
-    # for item in aaa:
-    #     print(type(aaa))
-    #     print(type(item))
-    #     vec.write(str(aaa[0])) 
-    #     vec.write("\n")
-    # vec.close()
+    # vec = open("resu" + '.vec', 'a')        #changer le 'a'
+    # zeros=np.zeros((8388608,1),dtype=int)
+    # np.savetxt('resu.vec',zeros,fmt='%i')
     return resu
 #Ev = a['Events']
 #print(Ev)
