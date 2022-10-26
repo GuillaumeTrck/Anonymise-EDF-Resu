@@ -58,19 +58,22 @@ def AN(EDFDB, resuDB, directory):
     EDFList=glob.glob("*.EDF")
     resuList=glob.glob("*.resu")
     for resu in resuList:
-        var=saveDataresu(resu,resuDB,ID)
+        try:
+            var=saveDataresu(resu,resuDB,ID)
+        except : 
+            print("error with saveDataResu")
+            return
         if var:
             #1. récupérer edfname
             try:
                 fid = open(resu, "rb")
             except:
                 printLogs("Problème ouverture resu") 
-
+                return
             fid.seek(144)
             RawFileName= fid.read(22).decode('unicode_escape')
             RawFileNameStrip=RawFileName.replace(" ","")
             fid.close()
-            
             #2. trouver l'edf 
             term='.EDF'
             RawFileNameStripTerm=RawFileNameStrip + term
@@ -154,31 +157,15 @@ def UnAnonymiseResu(resuName,matriceresu,a):
     return
                                          
 def saveDataresu(resuName,resuDB,ID):
-    x='resuAnonyme'
-    try:
-        matriceresu=np.loadtxt(resuDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    except:
-        printLogs("Problème chargement matrice resu")
-
-    if x in resuName:
+    matriceresu=np.loadtxt(resuDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    if 'resuAnonyme' in resuName:
         print("Fichier resu déjà sauvé")
         return False
     else:
-    # Writing data
-        print("J'ai bien sauvé les données")
-        try:
-            dataFile = open(resuDB, 'a')
-        except:
-            printLogs("Problème ouverture resuDB")
-
+        dataFile = open(resuDB, 'a')
         dataFile.write(resuName) 
         dataFile.write('\t')
-
-        try :
-            fid = open(resuName, "rb")
-        except:
-            printLogs("Problème ouverture resu")
-
+        fid = open(resuName, "rb")
         resu = {}
         fid.seek(24)
         resu['ExamDate'] = fid.read(10).decode('unicode_escape')
@@ -212,33 +199,20 @@ def saveDataresu(resuName,resuDB,ID):
         dataFile.write('\n')
         fid.close()
         dataFile.close()
-
     return True
 
 def saveDataEDF(RawFileName, EDFDB,ID):
-    x='xxxxxxxxxxxxxxxxxxxxxx.EDF'
-    try:
-        matriceEDF=np.loadtxt(EDFDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    except:
-        printLogs("Problème chargement matrice EDF")
-
-    if x in RawFileName:
+    matriceEDF=np.loadtxt(EDFDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    if 'xxxxxxxxxxxxxxxxxxxxxx.EDF' in RawFileName:
         print("Fichier EDF déjà sauvé")
         return
     else:
-    # Writing data
-        try:
-            dataFile = open(EDFDB, "a")
-        except:
-            printLogs("Problème ouverture EDFDB")
+    # Writing datae
+        dataFile = open(EDFDB, "a")
         dataFile.write(RawFileName)
         dataFile.write('\t')
-        
-        try:
-            EDF = open(RawFileName, "rb")
-        except:
-            printLogs("Problème ouverture EDF")       
-
+        EDF = open(RawFileName, "rb")
+        printLogs("Problème ouverture EDF")       
         EDF.read(8)
         EDFText = EDF.read(168).decode('unicode_escape')    
         EDF.close()
@@ -251,7 +225,6 @@ def saveDataEDF(RawFileName, EDFDB,ID):
         dataFile.write(str(ID))
         dataFile.write('\n')
         dataFile.close()
-
     return
 
 def WriteFirstLine(DB, Firstline):
