@@ -14,6 +14,8 @@ from datetime import datetime
 from utils import * 
 from Testuniform import uniformEDF
 from Testpredict import predictEDF
+import utils as u
+from sklearn import metrics
 #from Testpredict import predictEDF
     
 def AA(args):
@@ -64,7 +66,7 @@ def AA(args):
         return
     # 3.Reading resu
     try:
-    resu = readResu(args.resu,raw)    
+        resu = readResu(args.resu,raw)    
     except Exception as e: 
         printLogs("Error with readResu(): " + str(e) + "\nEnd of the procedure")
     else: 
@@ -140,27 +142,54 @@ def StagesAnalysis(resu,raw,header):
             return
 
 def ArousalAnalysis(raw,header):
-            print(header['labels'])
+            # print(header['labels'])
             #Uniform 
             chanels=[]
             if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' and 'Frq.car.' and 'EMG jamb.1' and 'EMG jamb.2' in header['labels']:
                 chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG','Frq.car.','EMG jamb.1','EMG jamb.2')
                 printLogs("All chanels for arousal analysis selected")
-                print (chanels[0:])
+                # print (chanels[0:])
             else : 
                 printLogs("Prob chanels for arousal analysis")
             
             raw.pick_channels(chanels)
             info = raw.info
-            print(info)
-            print(info['ch_names'])
-            new_raw=raw.get_data()
-            print("info raw" +str(new_raw.shape))
-            a = uniformEDF(new_raw)
-            print(a.shape)
+            # print(info)
+            # print(info['ch_names'])
+            # new_raw=raw.get_data()
+            # print("info raw" +str(new_raw.shape))
+            #a = uniformEDF(new_raw)
+            
+            #print(a.shape)
 
             #Predict
-            b= predictEDF(a,args.edf,new_raw)
+            #b= predictEDF(a,args.edf,new_raw)
+
+            #comparaison predic/label
+
+            label=np.loadtxt("resu.vec", dtype=int)
+            print("labelshape"+str(label.shape))
+            prediction=np.loadtxt(os.path.join(u.TESTTEST_PATH,'RawAnonyme7.EDF.vec'),dtype=float)
+            print("predictionshape"+str(prediction.shape))
+            auc = metrics.roc_auc_score(label,prediction)
+            print(auc)
+            fpr, tpr, _ = metrics.roc_curve(label,prediction)
+            plt.plot(fpr, tpr)
+            plt.ylabel('True Positive Rate')
+            plt.xlabel('False Positive Rate')
+            plt.show()
+
+
+
+
+
+
+
+            precision, recall, thresholds = precision_recall_curve(y_test, y_test_predicted_probas
+            f1_scores = 2*recall*precision/(recall+precision)
+            print('Best threshold: ', thresholds[np.argmax(f1_scores)])
+            print('Best F1-Score: ', np.max(f1_scores))
+            
             return
             
 
