@@ -63,12 +63,12 @@ def AA(args):
         printLogs("Unknown version format. End of the procedure") 
         return
     # 3.Reading resu
-    # try:
-    resu = readResu(args.resu)    
-    # except Exception as e: 
-    #     printLogs("Error with readResu(): " + str(e) + "\nEnd of the procedure")
-    # else: 
-    #     printLogs("readResu() ok")
+    try:
+    resu = readResu(args.resu,raw)    
+    except Exception as e: 
+        printLogs("Error with readResu(): " + str(e) + "\nEnd of the procedure")
+    else: 
+        printLogs("readResu() ok")
 
     # 4.Selecting channels stages
     if (args.stages):
