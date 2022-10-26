@@ -16,6 +16,8 @@ from Testuniform import uniformEDF
 from Testpredict import predictEDF
 import utils as u
 from sklearn import metrics
+from sklearn.metrics import f1_score
+import glob
 #from Testpredict import predictEDF
     
 def AA(args):
@@ -167,29 +169,48 @@ def ArousalAnalysis(raw,header):
 
             #comparaison predic/label
 
-            label=np.loadtxt("resu.vec", dtype=int)
-            print("labelshape"+str(label.shape))
-            prediction=np.loadtxt(os.path.join(u.TESTTEST_PATH,'RawAnonyme7.EDF.vec'),dtype=float)
-            print("predictionshape"+str(prediction.shape))
-            auc = metrics.roc_auc_score(label,prediction)
-            print(auc)
-            fpr, tpr, _ = metrics.roc_curve(label,prediction)
-            plt.plot(fpr, tpr)
-            plt.ylabel('True Positive Rate')
-            plt.xlabel('False Positive Rate')
-            plt.show()
+            # label=np.loadtxt("resu.vec", dtype=int)
+            # print("labelshape"+str(label.shape))
+            # prediction=np.loadtxt(os.path.join(u.TESTTEST_PATH,'RawAnonyme7.EDF.vec'),dtype=float)
+            # print("predictionshape"+str(prediction.shape))
+            # auc = metrics.roc_auc_score(label,prediction)
+            # print(auc)
+            # fpr, tpr, _ = metrics.roc_curve(label,prediction)
+            # plt.plot(fpr, tpr)
+            # plt.ylabel('True Positive Rate')
+            # plt.xlabel('False Positive Rate')
+            # plt.show()
 
-
-
-
-
-
-
-            precision, recall, thresholds = precision_recall_curve(y_test, y_test_predicted_probas
-            f1_scores = 2*recall*precision/(recall+precision)
-            print('Best threshold: ', thresholds[np.argmax(f1_scores)])
-            print('Best F1-Score: ', np.max(f1_scores))
+            #1 trouver les fichiers
+            TrueResu = os.path.join(u.NONAA_PATH+'\BOUNRED0-20220115.resu')
+            FalseResu = os.path.join(u.AA_PATH +'\BOUNRED0-20220115.resu')
+            EDFcoco = os.path.join(u.NONAA_PATH+'\BR515010.edf')
+            print(TrueResu)
+            print(FalseResu)
+            print(EDFcoco)
             
+            #2 transformer les donnees en 0 et 1
+
+    
+
+            resuscore=resuToVec(TrueResu,EDFcoco)
+            matricescoreuse=resuscore
+            print("resuscore")
+            print(str(len(matricescoreuse)))
+            resuAA=resuToVec(FalseResu,EDFcoco)
+            matriceAA=resuAA
+            print("resusnoncore")
+            print(str(len(matriceAA)))
+
+            #3 calculer f1score
+            comparaison=f1_score(matricescoreuse,matriceAA)
+            print(comparaison)
+
+            # precision, recall, thresholds = precision_recall_curve(label,prediction)
+            # f1_scores = 2*recall*precision/(recall+precision)
+            # print('Best threshold: ', thresholds[np.argmax(f1_scores)])
+            # print('Best F1-Score: ', np.max(f1_scores))
+
             return
             
 

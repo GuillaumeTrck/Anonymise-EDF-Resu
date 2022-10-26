@@ -52,6 +52,8 @@ def initPaths(mainFile):
     global FEATURE_PATH
     global TRAINING_PATH
     global TESTTEST_PATH
+    global AA_PATH
+    global NONAA_PATH
     
     CURRENT_PATH = os.path.dirname(os.path.realpath(mainFile))
 
@@ -61,6 +63,8 @@ def initPaths(mainFile):
     FEATURE_PATH = os.path.join(DATA_PATH, 'featureEDF_8m')
     TRAINING_PATH=os.path.join(DATA_PATH, 'training')
     TESTTEST_PATH=os.path.join(CURRENT_PATH, 'TestTest')
+    AA_PATH=os.path.join(CURRENT_PATH, 'ComparaisonAA\AA')
+    NONAA_PATH=os.path.join(CURRENT_PATH, 'ComparaisonAA\POURTEST')
     return
 
 def checkAnonymisation() :
