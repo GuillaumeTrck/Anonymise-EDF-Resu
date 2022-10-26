@@ -1,0 +1,17 @@
+EDF/EDFHeader/champs identification/Date/ID
+Data/Anonym\BJ311010.EDF	BATSINDA##JOSEPH##560214MB05                                                    	Erasme-ULB-Endymion##C03.56##20##14/02/1956##913##P9&08#202#                    	11/01/22	2
+Data/Anonym\BF330010.EDF	BECKERS##FRANCOIS LUDWIG##800212MB01                                            	Erasme-ULB-Endymion##C03.56##20##12/02/1980##913##P9&08#202#                    	30/01/22	3
+Data/Anonym\BP316010.EDF	BECKERS-VAN DEN HAUTE##PATRICK LAURENT##490810MB01                              	Erasme-ULB-Endymion##C03.56##20##10/08/1949##913##P9&08#202#                    	16/01/22	4
+Data/Anonym\BR515010.EDF	BOUNAAZOUZ##REDOUAN##741124MB06                                                 	Erasme-ULB-Endymion##C03.56##20##24/11/1974##915##P9&09#202#                    	15/01/22	6
+Data/Anonym\BJ311010.EDF	BATSINDA##JOSEPH##560214MB05                                                    	Erasme-ULB-Endymion##C03.56##20##14/02/1956##913##P9&08#202#                    	11/01/22	8
+Data/Anonym\BF330010.EDF	BECKERS##FRANCOIS LUDWIG##800212MB01                                            	Erasme-ULB-Endymion##C03.56##20##12/02/1980##913##P9&08#202#                    	30/01/22	9
+Data/Anonym\BP316010.EDF	BECKERS-VAN DEN HAUTE##PATRICK LAURENT##490810MB01                              	Erasme-ULB-Endymion##C03.56##20##10/08/1949##913##P9&08#202#                    	16/01/22	10
+Data/Anonym\BR515010.EDF	BOUNAAZOUZ##REDOUAN##741124MB06                                                 	Erasme-ULB-Endymion##C03.56##20##24/11/1974##915##P9&09#202#                    	15/01/22	12
+Data/Anonym\BJ311010.EDF	BATSINDA##JOSEPH##560214MB05                                                    	Erasme-ULB-Endymion##C03.56##20##14/02/1956##913##P9&08#202#                    	11/01/22	14
+Data/Anonym\BF330010.EDF	BECKERS##FRANCOIS LUDWIG##800212MB01                                            	Erasme-ULB-Endymion##C03.56##20##12/02/1980##913##P9&08#202#                    	30/01/22	15
+Data/Anonym\BP316010.EDF	BECKERS-VAN DEN HAUTE##PATRICK LAURENT##490810MB01                              	Erasme-ULB-Endymion##C03.56##20##10/08/1949##913##P9&08#202#                    	16/01/22	16
+Data/Anonym\BR515010.EDF	BOUNAAZOUZ##REDOUAN##741124MB06                                                 	Erasme-ULB-Endymion##C03.56##20##24/11/1974##915##P9&09#202#                    	15/01/22	18
+Data/Anonym\BJ311010.EDF	BATSINDA##JOSEPH##560214MB05                                                    	Erasme-ULB-Endymion##C03.56##20##14/02/1956##913##P9&08#202#                    	11/01/22	20
+Data/Anonym\BF330010.EDF	BECKERS##FRANCOIS LUDWIG##800212MB01                                            	Erasme-ULB-Endymion##C03.56##20##12/02/1980##913##P9&08#202#                    	30/01/22	21
+Data/Anonym\BP316010.EDF	BECKERS-VAN DEN HAUTE##PATRICK LAURENT##490810MB01                              	Erasme-ULB-Endymion##C03.56##20##10/08/1949##913##P9&08#202#                    	16/01/22	22
+Data/Anonym\BR515010.EDF	BOUNAAZOUZ##REDOUAN##741124MB06                                                 	Erasme-ULB-Endymion##C03.56##20##24/11/1974##915##P9&09#202#                    	15/01/22	24
