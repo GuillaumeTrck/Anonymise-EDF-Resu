@@ -99,58 +99,46 @@ def AN(EDFDB, resuDB, directory):
     return
 
 def AnonymiseEDF(EDFName):                                 
-    x='xxxxxxxxxxxxxxxxxxxxxx.EDF'
-    if x in EDFName:
-        print("Fichier EDF déjà anonyme")
-    else:
-        EDF = open(EDFName, "r+")
-        EDF.seek(8)                                            
-        sss = "x" * 8 + "##" + "xxxxxxxx" + "##"
-        EDF.write(sss)
-        EDF.seek(28)
-        sss = "010101MX00             "+" "*38 #22 carac en tout 
-        EDF.write(sss)
-        EDF.seek(88)
-        sss="Erasme-ULB-Endymion##C03.56##20##01/01/2001##000##P9&10#202#"
-        EDF.write(sss)
-
-        # EDF.seek(122)
-        # sss = "01/01/2001" + " "*36
-        
-        EDF.seek(168)
-        sss = "01/01/01"
-        EDF.write(sss)
-        EDF.close()
+    EDF = open(EDFName, "r+")
+    EDF.seek(8)                                            
+    sss = "x" * 8 + "##" + "xxxxxxxx" + "##"
+    EDF.write(sss)
+    EDF.seek(28)
+    sss = "010101MX00             "+" "*38 #22 carac en tout 
+    EDF.write(sss)
+    EDF.seek(88)
+    sss="Erasme-ULB-Endymion##C03.56##20##01/01/2001##000##P9&10#202#"
+    EDF.write(sss)
+    EDF.seek(168)
+    sss = "01/01/01"
+    EDF.write(sss)
+    EDF.close()
     return 
 
 def AnonymiseResu(resuName):                                                                     
-    x='resuAnonyme'
-    if x in resuName:
-        print("Fichier resu déjà anonyme")
-    else:
-        resu=open(resuName,'r+')
-        resu.seek(24)                                           
-        sss = "01/01/2001"
-        resu.write(sss)
-        resu.seek(48)                                         
-        sss="0000"
-        resu.write(sss)
-        resu.seek(144)
-        sss = "x" * 22
-        resu.write(sss)
-        resu.seek(1922)
-        sss = "010101MX00" + " "*12
-        resu.write(sss)
-        resu.seek(1944)
-        sss = "x" * 54
-        resu.write(sss)
-        resu.seek(1998)
-        sss = "01/01/2001"
-        resu.write(sss)
-        resu.seek(2008)
-        sss = "M" 
-        resu.write(sss)
-        resu.close()
+    resu=open(resuName,'r+')
+    resu.seek(24)                                           
+    sss = "01/01/2001"
+    resu.write(sss)
+    resu.seek(48)                                         
+    sss="0000"
+    resu.write(sss)
+    resu.seek(144)
+    sss = "x" * 22
+    resu.write(sss)
+    resu.seek(1922)
+    sss = "010101MX00" + " "*12
+    resu.write(sss)
+    resu.seek(1944)
+    sss = "x" * 54
+    resu.write(sss)
+    resu.seek(1998)
+    sss = "01/01/2001"
+    resu.write(sss)
+    resu.seek(2008)
+    sss = "M" 
+    resu.write(sss)
+    resu.close()
     return      
 
 def UnAnonymiseEDF(EDFName,matriceEDF,a):                    
