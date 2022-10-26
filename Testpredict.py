@@ -20,6 +20,7 @@ print("|-------------------------------------------------Predict----------------
 
 K.set_image_data_format('channels_last')  # TF dimension ordering in this code
 
+#TODO check anchor pour eviter de devoir absolument charger 13 channels
 def anchor (ref, ori): # input m*n np array
     # print("ori"+str(ori.shape))
     # print("ref"+str(ref.shape))
@@ -34,7 +35,7 @@ def anchor (ref, ori): # input m*n np array
         tmp=np.interp(np.arange(s2)/(s2-1)*(s1-1), np.arange(s1), ref[i,:])
         # print("tmp"+str(tmp.shape)) 
         ori_new[i,np.argsort(ori[i,:])]=tmp
-        # print(tmp.shape)
+        print("ori_new.shape"+str(ori_new.shape))
     return ori_new
 
 def pool_avg_2(input,if_mask=False):
@@ -46,6 +47,7 @@ def pool_avg_2(input,if_mask=False):
     if (if_mask): # -1 position are masked by -1, not avg
         mask = np.minimum(input[:,index1],input[:,index2])
         output[mask<0]=-1
+    print("output de pool_avg_2"+str(output))           
     return output
 
 ###### PARAMETER ###############
@@ -59,7 +61,7 @@ num_augtest=1
 
 ################################
 
-def predictEDF(raw,EDFName):
+def predictEDF(raw,EDFName,new_raw):
 
     print(EDFName)
     ref555=np.load(os.path.join(u.DEEPSLEEP_PATH,'ref555.npy'))    
@@ -85,11 +87,13 @@ def predictEDF(raw,EDFName):
     the_id=os.path.join(u.TRAINING_PATH,EDFName)
     # image_raw: pad to 8M; image_ori: resize & shift; image: prediction input
     #image_raw = import_signals(the_id + '.mat') # PARAMETER
-    image_raw = raw
+    image_raw = new_raw
     # print(image_raw)
     
     d0=image_raw.shape[0]
     d1=image_raw.shape[1]
+    print(d0)
+    print(d1)
     image_raw = anchor(ref555, image_raw)
     
     if(d1 < size):
@@ -140,7 +144,6 @@ def predictEDF(raw,EDFName):
         print("premiershapeoutput1"+str(output1.shape))
         output1=np.reshape(output1,(size1*batch))
         print(output1.shape)
-        print(output1)
         print(np.mean(output1))
 
         output=output1
@@ -152,6 +155,7 @@ def predictEDF(raw,EDFName):
         j+=1
 
     output_new1=output_new/(num_augtest)
+    print("Outputnew1" +str(output_new1))
     j=0
     while (j<num_pool):
         print("je suis dans le while 3")
@@ -170,6 +174,7 @@ def predictEDF(raw,EDFName):
 
     if(write_vec):
         print("vecvec")
+        print(the_id)
         vec = open(the_id + '.vec', 'w')
         for item in output_final:
             #vec.write("%.4f\n" % item)

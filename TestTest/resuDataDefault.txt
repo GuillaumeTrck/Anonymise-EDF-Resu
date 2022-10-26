@@ -1,0 +1,8 @@
+resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID
+ROSSMON0-20220131.resu	31/01/2022	914 	RM431010              	650625FRAA            	ROSSOMME                   	MONIQUE                    	25/06/1965	F	1
+ROSSMON0-20220131.resu	31/01/2022	914 	RM431010              	650625FRAA            	ROSSOMME                   	MONIQUE                    	25/06/1965	F	2
+ROSSMON0-20220131.resu	31/01/2022	914 	RM431010              	650625FRAA            	ROSSOMME                   	MONIQUE                    	25/06/1965	F	3
+ROSSMON0-20220131.resu	31/01/2022	914 	RM431010              	650625FRAA            	ROSSOMME                   	MONIQUE                    	25/06/1965	F	4
+ROSSMON0-20220131.resu	31/01/2022	914 	RM431010              	650625FRAA            	ROSSOMME                   	MONIQUE                    	25/06/1965	F	5
+ROSSMON0-20220131.resu	31/01/2022	914 	RM431010              	650625FRAA            	ROSSOMME                   	MONIQUE                    	25/06/1965	F	6
+ROSSMON0-20220131.resu	31/01/2022	914 	RM431010              	650625FRAA            	ROSSOMME                   	MONIQUE                    	25/06/1965	F	7

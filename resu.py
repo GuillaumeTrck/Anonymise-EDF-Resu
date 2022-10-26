@@ -2,7 +2,11 @@ import numpy as np
 from pyrsistent import v
 import copy
 from operator import itemgetter, attrgetter
-from utils import printLogs 
+from utils import printLogs
+import fileinput
+import sys
+import mne
+from edf import *
 
 class Point:
     def __init__(self):
@@ -69,7 +73,7 @@ def readResu(resuName):
     resu['Free2'] =  fid.read(24)
     resu['Free3'] =  fid.read(24)
     resu['Free4'] =  fid.read(24)
-    resu['Flags'] =  fid.read(384)
+    resu['Flags'] =  fid.read(384) #648
     resu['SleepVar'] =  fid.read(1200)
     resu['Free6'] =  fid.read(72)
     resu['A'] =  fid.read(2)
@@ -235,8 +239,8 @@ def readResu(resuName):
             event.Area = 0
         Events.append(event)
     resu['Events'] = Events
+    
     return resu
-
 #Ev = a['Events']
 #print(Ev)
 #print(len(a['Events']))
@@ -252,6 +256,50 @@ def readResu(resuName):
 #a['Events'].sort(key=lambda e: e.reprise.temps)
 #print(a['Events'])
 #print(len(a['Events']))
+
+
+# a=readResu("TestTest//resuAnonyme7.resu")
+# a["Events"] = 0
+# print(a)
+# a=readResu("TestTest//ROSSMON0-20220131.resu")
+# a["Events"] = 0
+#print(a)
+
+def resuToVec(resuName,edf):
+    print("-----------------------------------------------Test Guillaume-------------------------------------------------------------")
+    dictionaryResu=readResu(resuName)
+    #print(Events)
+    #print(len(Events))
+
+    #get the shape of edf
+    taille=[]
+    print(edf)
+    raw = readEDF(edf)
+    new_raw=raw.get_data()
+    taille=new_raw.shape
+    # print(taille[1])
+    Events=dictionaryResu['Events']
+    eventSeven=filter(lambda event : event.type ==7, Events)
+    microEveil=filter(lambda event : event.sous_type == 1, eventSeven)
+
+
+    A=np.zeros((taille[1],1),dtype=int)
+    for me in microEveil:
+        t0=me.debut.temps
+        tf=me.fin.temps
+        A[t0:tf]=1
+        # print(t0)
+        # print(tf)
+    
+
+    #Enregistrer fichier vec
+    # vec = open("resu" + '.vec', 'w')
+    # np.savetxt('resu.vec',A,fmt='%i')
+    # vec.close()
+    # vec = open("resu" + '.vec', 'r+',encoding='utf-8') 
+    # print("vecvec")
+    return A
+
 def saveResu(resu, resuName):
     Mot = []
     nMots = 12

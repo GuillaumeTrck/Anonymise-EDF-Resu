@@ -52,6 +52,9 @@ def initPaths(mainFile):
     global DATA_PATH
     global FEATURE_PATH
     global TRAINING_PATH
+    global TESTTEST_PATH
+    global AA_PATH
+    global NONAA_PATH
     
     CURRENT_PATH = os.path.dirname(os.path.realpath(mainFile))
     #For Testpredict.py
@@ -59,6 +62,9 @@ def initPaths(mainFile):
     DATA_PATH = os.path.join(DEEPSLEEP_PATH, 'dataEDF')
     FEATURE_PATH = os.path.join(DATA_PATH, 'featureEDF_8m')
     TRAINING_PATH=os.path.join(DATA_PATH, 'training')
+    TESTTEST_PATH=os.path.join(CURRENT_PATH, 'TestTest')
+    AA_PATH=os.path.join(CURRENT_PATH, 'ComparaisonAA\AA')
+    NONAA_PATH=os.path.join(CURRENT_PATH, 'ComparaisonAA\POURTEST')
     return
 
 def checkAnonymisation() :

@@ -57,7 +57,7 @@ def unzipEDF(EDFName, newEDFName, header):
     values=np.fromfile(EDFName,dtype='int8')
     values = values[header['headerSize']:]
     values = values+129
-    Mud=EDF_mu_decode();
+    Mud=EDF_mu_decode()
     values = Mud[values]
     x = np.arange(header['headerSize']/2)
     y=np.ones_like(x)
