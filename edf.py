@@ -9,14 +9,6 @@ from utils import printLogs
 def readEDF(EDFName):
     ErasmeToMneEdf(EDFName)
     raw = mne.io.read_raw_edf(EDFName, preload=True)
-    #print(raw)
-    #print('Chan =', raw.ch_names)
-   #print('Sampling frequency =', raw.info['sfreq'])
-    #print('Data shape (channels, times) =', raw._data.shape)
-    #print(raw.info)
-    #raw.pick_types(eeg=True)
-    #print('Chan =', raw.ch_names)
-    #raw.plot(duration=30, start=30, n_channels=1, block=True)
     MneToErasmeEdf(EDFName)
     return raw
 
@@ -362,5 +354,14 @@ def EDF_mu_decode():
     EDF_MuDecodingTable[256]= 2048 
     return EDF_MuDecodingTable
 
-
+def printEDFGraph(raw):
+    print(raw)
+    # print('Chan =', raw.ch_names)
+    # print('Sampling frequency =', raw.info['sfreq'])
+    # print('Data shape (channels, times) =', raw._data.shape)
+    # print(raw.info)
+    # raw.pick_types(eeg=True)
+    print('Chan =', raw.ch_names)
+    raw.plot(duration=30, start=30, n_channels=5, block=True)
+    return
 
