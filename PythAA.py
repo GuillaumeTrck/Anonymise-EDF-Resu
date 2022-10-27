@@ -144,8 +144,10 @@ def StagesAnalysis(resu,raw,header):
             return
 
 def ArousalAnalysis(raw,header):
-            # print(header['labels'])
-            #Uniform 
+            print(header['labels'])
+            #Uniform
+            recordsNumber=(header['recordsNumber'])
+            recordDuration=(header['recordDuration'])
             chanels=[]
             if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' and 'Frq.car.' and 'EMG jamb.1' and 'EMG jamb.2' in header['labels']:
                 chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG','Frq.car.','EMG jamb.1','EMG jamb.2')
@@ -154,66 +156,88 @@ def ArousalAnalysis(raw,header):
             else : 
                 printLogs("Prob chanels for arousal analysis")
             
+            # if 'EEG F4' and 'EEG C4' and 'EEG O2' in header['labels']:
+            #      chanels=('EEG F4','Amp Abd','ECG','Flux Nas','EMG menton')
             raw.pick_channels(chanels)
+            #printEDFGraph(raw)
             info = raw.info
-            # print(info)
-            # print(info['ch_names'])
-            # new_raw=raw.get_data()
-            # print("info raw" +str(new_raw.shape))
-            #a = uniformEDF(new_raw)
-            
-            #print(a.shape)
+            print(info)
+            print(info['ch_names'])
+            new_raw=raw.get_data()
+            print("info raw" +str(new_raw.shape))
+            a = uniformEDF(new_raw) 
+            print(a.shape)
 
             #Predict
-            #b= predictEDF(a,args.edf,new_raw)
-
+            b= predictEDF(a,args.edf,new_raw)
+            
             #comparaison predic/label
 
-            # label=np.loadtxt("resu.vec", dtype=int)
-            # print("labelshape"+str(label.shape))
-            # prediction=np.loadtxt(os.path.join(u.TESTTEST_PATH,'RawAnonyme7.EDF.vec'),dtype=float)
-            # print("predictionshape"+str(prediction.shape))
-            # auc = metrics.roc_auc_score(label,prediction)
-            # print(auc)
-            # fpr, tpr, _ = metrics.roc_curve(label,prediction)
-            # plt.plot(fpr, tpr)
-            # plt.ylabel('True Positive Rate')
-            # plt.xlabel('False Positive Rate')
-            # plt.show()
+            label=np.loadtxt("resu.vec", dtype=int)
+            print("labelshape"+str(label.shape))
+            prediction=np.loadtxt(os.path.join(u.TESTTEST_PATH,'RawAnonyme7.EDF.vec'),dtype=float)
+            print("predictionshape"+str(prediction.shape))
+            auc = metrics.roc_auc_score(label,prediction)
+            print(auc)
+            fpr, tpr, _ = metrics.roc_curve(label,prediction)
+            plt.plot(fpr, tpr)
+            plt.ylabel('True Positive Rate')
+            plt.xlabel('False Positive Rate')
+            plt.show()
 
-            #1 trouver les fichiers
-            TrueResu = os.path.join(u.NONAA_PATH+'\BOUNRED0-20220115.resu')
-            FalseResu = os.path.join(u.AA_PATH +'\BOUNRED0-20220115.resu')
-            EDFcoco = os.path.join(u.NONAA_PATH+'\BR515010.edf')
-            print(TrueResu)
-            print(FalseResu)
-            print(EDFcoco)
+            abcd=F1ScoreBetweenResuAndAA(recordsNumber,recordDuration)
+            print(abcd)
+            matricescoreuse=abcd[1]
+            deepLearning=abcd[2]
+
+            bbbb=F1ScoreBetweenResuAndDeepsleep(matricescoreuse,deepLearning)
+            print(bbbb)
             
-            #2 transformer les donnees en 0 et 1
-
-    
-
-            resuscore=resuToVec(TrueResu,EDFcoco)
-            matricescoreuse=resuscore
-            print("resuscore")
-            print(str(len(matricescoreuse)))
-            resuAA=resuToVec(FalseResu,EDFcoco)
-            matriceAA=resuAA
-            print("resusnoncore")
-            print(str(len(matriceAA)))
-
-            #3 calculer f1score
-            comparaison=f1_score(matricescoreuse,matriceAA)
-            print(comparaison)
-
-            # precision, recall, thresholds = precision_recall_curve(label,prediction)
-            # f1_scores = 2*recall*precision/(recall+precision)
-            # print('Best threshold: ', thresholds[np.argmax(f1_scores)])
-            # print('Best F1-Score: ', np.max(f1_scores))
 
             return
             
+def F1ScoreBetweenResuAndAA(recordsNumber,recordDuration):
+    #1 trouver les fichiers
+    TrueResu = os.path.join(u.NONAA_PATH+'\BOUNRED0-20220115.resu')
+    FalseResu = os.path.join(u.AA_PATH +'\BOUNRED0-20220115.resu')
+    print(TrueResu)
+    print(FalseResu)
+    
+    
+    #2 transformer les donnees en 0 et 1
+    resuscore=resuToVec(TrueResu,recordsNumber,recordDuration)
+    matricescoreuse=resuscore
+    print(str(len(matricescoreuse)))
+    resuAA=resuToVec(FalseResu,recordsNumber,recordDuration)
+    matriceAA=resuAA
+    print("resusnoncore")
+    print(str(len(matriceAA)))
 
+    #3 calculer f1score
+    comparaison=f1_score(matricescoreuse,matriceAA)
+    print(comparaison)
+    return comparaison,matricescoreuse,matriceAA
+
+def F1ScoreBetweenResuAndDeepsleep(matricescoreuse,deepLearning):
+    label=matricescoreuse
+    print(type(label))
+    print("shape label"+str(label.shape))
+
+    prediction = np.loadtxt(deepLearning,delimiter='\t',comments=None,encoding='utf-8',ndmin=1)
+    print(type(prediction))
+    print("shape predict"+str(prediction.shape))
+
+    precision, recall, thresholds =metrics.precision_recall_curve(label,prediction)
+    f1_scores = 2*recall*precision/(recall+precision)
+
+    print(f1_scores)
+    print('Best threshold: ', thresholds[np.argmax(f1_scores)])
+    print('Best F1-Score: ', np.max(f1_scores))
+    plt.plot(precision, recall)
+    plt.ylabel('True Positive Rate')
+    plt.xlabel('False Positive Rate')
+    plt.show()
+    return f1_score
 
 args = parseArguments()
 initPaths(__file__)
