@@ -265,25 +265,16 @@ def readResu(resuName):
 # a["Events"] = 0
 #print(a)
 
-def resuToVec(resuName,edf):
-    print("-----------------------------------------------Test Guillaume-------------------------------------------------------------")
+def resuToVec(resuName,recordsNumber,recordDuration):
+    print("-----------------------------------------------RESU-TO-VEC-------------------------------------------------------------")
     dictionaryResu=readResu(resuName)
-    #print(Events)
-    #print(len(Events))
-
-    #get the shape of edf
-    taille=[]
-    print(edf)
-    raw = readEDF(edf)
-    new_raw=raw.get_data()
-    taille=new_raw.shape
-    # print(taille[1])
     Events=dictionaryResu['Events']
     eventSeven=filter(lambda event : event.type ==7, Events)
     microEveil=filter(lambda event : event.sous_type == 1, eventSeven)
 
-
-    A=np.zeros((taille[1],1),dtype=int)
+    taille=recordDuration*recordsNumber
+    taille=taille*200
+    A=np.zeros(taille,dtype=int)
     for me in microEveil:
         t0=me.debut.temps
         tf=me.fin.temps
