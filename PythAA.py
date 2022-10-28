@@ -4,7 +4,7 @@ import mne
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+#from sklearn.metrics import confusion_matrix
 #from yasa.hypno import hypno_str_to_int_Erasme, hypno_upsample_to_data
 from edf import *
 from resu import *
@@ -16,8 +16,8 @@ from Testuniform import uniformEDF
 from Testpredict import predictEDF
 import utils as u
 from sklearn import metrics
-from sklearn.metrics import f1_score
-import glob
+#from sklearn.metrics import f1_score
+from sklearn.metrics import *
 #from Testpredict import predictEDF
     
 def AA(args):
@@ -68,7 +68,8 @@ def AA(args):
         return
     # 3.Reading resu
     try:
-        resu = readResu(args.resu,raw)    
+        print(args.resu)
+        resu = readResu(args.resu)    
     except Exception as e: 
         printLogs("Error with readResu(): " + str(e) + "\nEnd of the procedure")
     else: 
@@ -79,8 +80,8 @@ def AA(args):
         StageAA=StagesAnalysis(resu,raw,header)
     #select chanels for arousals analysis
     elif(args.arousal):
-        ArousalAA=ArousalAnalysis(raw,header)
-    return 
+        ArousalAA=ArousalAnalysis(resu,raw,header)
+     
 
 def StagesAnalysis(resu,raw,header):
             if 'EEG C4'in header['labels']:
@@ -143,11 +144,11 @@ def StagesAnalysis(resu,raw,header):
             saveResu(resu, args.resu)
             return
 
-def ArousalAnalysis(raw,header):
+def ArousalAnalysis(resu,raw,header):
             print(header['labels'])
             #Uniform
-            recordsNumber=(header['recordsNumber'])
-            recordDuration=(header['recordDuration'])
+            
+
             chanels=[]
             if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' and 'Frq.car.' and 'EMG jamb.1' and 'EMG jamb.2' in header['labels']:
                 chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG','Frq.car.','EMG jamb.1','EMG jamb.2')
@@ -161,61 +162,83 @@ def ArousalAnalysis(raw,header):
             raw.pick_channels(chanels)
             #printEDFGraph(raw)
             info = raw.info
-            print(info)
+            #print(info)
             print(info['ch_names'])
             new_raw=raw.get_data()
             print("info raw" +str(new_raw.shape))
-            a = uniformEDF(new_raw) 
-            print(a.shape)
+            #a = uniformEDF(new_raw) 
+            #print(a.shape)
 
             #Predict
-            b= predictEDF(a,args.edf,new_raw)
+            #b= predictEDF(a,args.edf,new_raw)
             
-            #comparaison predic/label
+            #comparaison
 
             label=np.loadtxt("resu.vec", dtype=int)
             print("labelshape"+str(label.shape))
-            prediction=np.loadtxt(os.path.join(u.TESTTEST_PATH,'RawAnonyme7.EDF.vec'),dtype=float)
+            prediction=np.loadtxt(os.path.join(u.NONAA_PATH,'BR515010.EDF.vec'),dtype=float)
             print("predictionshape"+str(prediction.shape))
-            auc = metrics.roc_auc_score(label,prediction)
-            print(auc)
-            fpr, tpr, _ = metrics.roc_curve(label,prediction)
-            plt.plot(fpr, tpr)
-            plt.ylabel('True Positive Rate')
-            plt.xlabel('False Positive Rate')
-            plt.show()
 
-            abcd=F1ScoreBetweenResuAndAA(recordsNumber,recordDuration)
-            print(abcd)
+            #TRUERESU
+            recordsNumber=(header['recordsNumber'])
+            recordDuration=(header['recordDuration'])
+            Events=(resu['Events'])
+            eventSeven=filter(lambda event : event.type ==7, Events)
+            TrueMicroEveil=filter(lambda event : event.sous_type == 1, eventSeven)
+            
+
+
+            abcd=F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil)
             matricescoreuse=abcd[1]
             deepLearning=abcd[2]
 
             bbbb=F1ScoreBetweenResuAndDeepsleep(matricescoreuse,deepLearning)
             print(bbbb)
+
+            # plt.plot(label)
+            # plt.show()
+
+            # plt.plot(prediction)
+            # plt.show()
+
+            # auc = metrics.roc_auc_score(label,prediction)
+            # print(auc)
+            # fpr, tpr, _ = metrics.roc_curve(label,prediction)
+            # plt.plot(fpr, tpr)
+            # plt.ylabel('True Positive Rate')
+            # plt.xlabel('False Positive Rate')
+            # plt.show()
             
 
             return
             
-def F1ScoreBetweenResuAndAA(recordsNumber,recordDuration):
+def F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil):
     #1 trouver les fichiers
-    TrueResu = os.path.join(u.NONAA_PATH+'\BOUNRED0-20220115.resu')
+    TrueResu = os.path.join(u.NONAA_PATH+'\BOUNRED0-20220115.resu') #peut changer ca en mettant resu en args
     FalseResu = os.path.join(u.AA_PATH +'\BOUNRED0-20220115.resu')
     print(TrueResu)
     print(FalseResu)
-    
-    
+
+    ReadFalseResu=readResu(FalseResu)
+    AAEvents=(ReadFalseResu['Events'])
+    AAeventSeven=filter(lambda event : event.type ==7, AAEvents)
+    AAMicroEveil=filter(lambda event : event.sous_type == 1, AAeventSeven)
+
     #2 transformer les donnees en 0 et 1
-    resuscore=resuToVec(TrueResu,recordsNumber,recordDuration)
-    matricescoreuse=resuscore
+    matricescoreuse=resuToVec(TrueResu,recordsNumber,recordDuration,TrueMicroEveil)
     print(str(len(matricescoreuse)))
-    resuAA=resuToVec(FalseResu,recordsNumber,recordDuration)
-    matriceAA=resuAA
-    print("resusnoncore")
-    print(str(len(matriceAA)))
+    matriceAA=resuToVec(FalseResu,recordsNumber,recordDuration,AAMicroEveil)
+    print("AAscore"+str(len(matriceAA)))
 
     #3 calculer f1score
     comparaison=f1_score(matricescoreuse,matriceAA)
     print(comparaison)
+    #4plot
+    plt.plot(matricescoreuse)
+    plt.show()
+
+    plt.plot(matriceAA)
+    plt.show()
     return comparaison,matricescoreuse,matriceAA
 
 def F1ScoreBetweenResuAndDeepsleep(matricescoreuse,deepLearning):

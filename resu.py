@@ -265,13 +265,9 @@ def readResu(resuName):
 # a["Events"] = 0
 #print(a)
 
-def resuToVec(resuName,recordsNumber,recordDuration):
+def resuToVec(resuName,recordsNumber,recordDuration,microEveil):
     print("-----------------------------------------------RESU-TO-VEC-------------------------------------------------------------")
-    dictionaryResu=readResu(resuName)
-    Events=dictionaryResu['Events']
-    eventSeven=filter(lambda event : event.type ==7, Events)
-    microEveil=filter(lambda event : event.sous_type == 1, eventSeven)
-
+    
     taille=recordDuration*recordsNumber
     taille=taille*200
     A=np.zeros(taille,dtype=int)

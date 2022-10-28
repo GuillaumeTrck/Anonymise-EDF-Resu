@@ -1,15 +1,10 @@
 import os
 from pyexpat import model
-import sys
 import numpy as np
-import scipy.io
 from keras import backend as K
 import tensorflow as tf
 import keras
 import h5py
-from utils import initPaths
-from utils import *
-from edf import readEDF
 import utils as u
 import Deepsleep.unet0
 
@@ -118,27 +113,27 @@ def predictEDF(raw,EDFName,new_raw):
     image_ori=np.roll(image_ori,shift,axis=1)
     print("imageori.shape" +str(image_ori.shape))
 
-    index1=np.arange(7) #entre les channels 0 et 6 
-    print(index1)
-    index2=np.arange(2)+8 #entre channels 8 et 9
-    print(index2)
-    index3=np.array([7,9,0]) #entres channels 7,10,12
-    print("index 3"+str(index3))
+    # index1=np.arange(7) #entre les channels 0 et 6 
+    # print(index1)
+    # index2=np.arange(2)+8 #entre channels 8 et 9
+    # print(index2)
+    # index3=np.array([7,9,0]) #entres channels 7,10,12
+    # print("index 3"+str(index3))
 
     j=0
     while (j<num_augtest):
         print("je suis dans le while 2")
-        #np.random.shuffle(index1)
         index1=np.array([8])
         index2=np.array([1])
+        index3=np.array([7,9,0])
         print(index1)
-        #np.random.shuffle(index2)
-        print("shuffle2" +str(index2))
+        print(index2)
+        print(index3)
         index=np.concatenate((index1[0:1],index2[0:1],index3))
-        print("imageori.shape" +str(image_ori.shape))
         print(index)
         image = image_ori[index,:]
         input_pred=np.reshape(image.T,(batch,size1,num_channel))
+        print("input_pred"+str(input_pred.shape))
 
         output1 = model01.predict(input_pred)
         print("premiershapeoutput1"+str(output1.shape))
