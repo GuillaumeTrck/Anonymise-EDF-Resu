@@ -1,6 +1,6 @@
 OUTDATED_IGNORE=1
 import mne
-#import yasa
+import yasa
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -84,65 +84,64 @@ def AA(args):
      
 
 def StagesAnalysis(resu,raw,header):
-            if 'EEG C4'in header['labels']:
-                printLogs("EEG C4 selected")
-                EEGChan = 'EEG C4' 
-            elif 'EEG F4' in header['labels']: 
-                printLogs("EEG F4 selected ") 
-                EEGChan = 'EEG F4'      
-            elif 'EEG O2' in header['labels']: 
-                printLogs("EEG O2 selected") 
-                EEGChan = 'EEG O2'
-            elif 'EEG Cz'in header['labels']:
-                printLogs("EEG Cz selected")
-                EEGChan = 'EEG Cz' 
-            elif 'EEG Fz' in header['labels']:  
-                printLogs("EEG Fz selected")
-                EEGChan = 'EEG Fz'      
-            elif 'EEG Oz' in header['labels']:  
-                printLogs("EEG Oz selected")
-                EEGChan = 'EEG Oz'
-            else : 
-                printLogs("EEG not selected. end of the procedure ")
-                return
-            if 'EOG Droit'in header['labels']:
-                printLogs("EOG Droit selected")
-                EOGChan = 'EOG Droit' 
-            elif 'EOG Gauche' in header['labels']:  
-                printLogs("EOG Gauche selected")
-                EOGChan = 'EOG Gauche'      
-            else : 
-                printLogs("EOG not selected")
-                EOGChan =None
-            if 'EMG menton'in header['labels']:
-                printLogs("EMG menton selected")
-                EMGChan = 'EMG menton'    
-            else : 
-                printLogs("MG not selected")
-                EMGChan = None
-            raw.pick_channels([EEGChan, EMGChan, EOGChan])
-
-            # 4.Preprocessing
-            raw.resample(100) # Downsample the data to 100 Hz
-            raw.filter(0.1, 40) # Apply a bandpass filter from 0.1 to 40 Hz
-            # 5. Sleep staging
-            try : 
-                sls = yasa.SleepStaging(raw, eeg_name=EEGChan, eog_name=EOGChan, emg_name=EMGChan)
-                y_pred = sls.predict()
-            except Exception as e:
-                printLogs("Erreur durant l'analyse par yasa : " + str(e) + "\nEnd of the procedure.") 
-                return
-            else : 
-                printLogs("AA terminée. Il reste à sauvegarder le fichier résumé")
-            confidence = sls.predict_proba().max(1)
-            # 6. Formatting data and saving resu
-            resu['stages'] = hypno_str_to_int_Erasme(y_pred)
-            while len(resu['stages']) < resu['epochsNumber']:
-                resu['stages']=np.append(resu['stages'], 0)
-            while len(resu['stages']) > resu['epochsNumber']:
-                resu['stages'] = resu['stages'][:-1]
-            saveResu(resu, args.resu)
-            return
+    if 'EEG C4'in header['labels']:
+        printLogs("EEG C4 selected")
+        EEGChan = 'EEG C4' 
+    elif 'EEG F4' in header['labels']: 
+        printLogs("EEG F4 selected ") 
+        EEGChan = 'EEG F4'      
+    elif 'EEG O2' in header['labels']: 
+        printLogs("EEG O2 selected") 
+        EEGChan = 'EEG O2'
+    elif 'EEG Cz'in header['labels']:
+        printLogs("EEG Cz selected")
+        EEGChan = 'EEG Cz' 
+    elif 'EEG Fz' in header['labels']:  
+        printLogs("EEG Fz selected")
+        EEGChan = 'EEG Fz'      
+    elif 'EEG Oz' in header['labels']:  
+        printLogs("EEG Oz selected")
+        EEGChan = 'EEG Oz'
+    else : 
+        printLogs("EEG not selected. end of the procedure ")
+        return
+    if 'EOG Droit'in header['labels']:
+        printLogs("EOG Droit selected")
+        EOGChan = 'EOG Droit' 
+    elif 'EOG Gauche' in header['labels']:  
+        printLogs("EOG Gauche selected")
+        EOGChan = 'EOG Gauche'      
+    else : 
+        printLogs("EOG not selected")
+        EOGChan =None
+    if 'EMG menton'in header['labels']:
+        printLogs("EMG menton selected")
+        EMGChan = 'EMG menton'    
+    else : 
+        printLogs("MG not selected")
+        EMGChan = None
+    raw.pick_channels([EEGChan, EMGChan, EOGChan])
+    # 4.Preprocessing
+    raw.resample(100) # Downsample the data to 100 Hz
+    raw.filter(0.1, 40) # Apply a bandpass filter from 0.1 to 40 Hz
+    # 5. Sleep staging
+    try : 
+        sls = yasa.SleepStaging(raw, eeg_name=EEGChan, eog_name=EOGChan, emg_name=EMGChan)
+        y_pred = sls.predict()
+    except Exception as e:
+        printLogs("Erreur durant l'analyse par yasa : " + str(e) + "\nEnd of the procedure.") 
+        return
+    else : 
+        printLogs("AA terminée. Il reste à sauvegarder le fichier résumé")
+    confidence = sls.predict_proba().max(1)
+    # 6. Formatting data and saving resu
+    resu['stages'] = hypno_str_to_int_Erasme(y_pred)
+    while len(resu['stages']) < resu['epochsNumber']:
+        resu['stages']=np.append(resu['stages'], 0)
+    while len(resu['stages']) > resu['epochsNumber']:
+        resu['stages'] = resu['stages'][:-1]
+    saveResu(resu, args.resu)
+    return
 
 def ArousalAnalysis(resu,raw,header):
             print(header['labels'])
@@ -171,32 +170,6 @@ def ArousalAnalysis(resu,raw,header):
 
             #Predict
             #b= predictEDF(a,args.edf,new_raw)
-            
-            #comparaison
-
-            label=np.loadtxt("resu.vec", dtype=int)
-            print("labelshape"+str(label.shape))
-            prediction=np.loadtxt(os.path.join(u.NONAA_PATH,'BR515010.EDF.vec'),dtype=float)
-            print("predictionshape"+str(prediction.shape))
-
-            #TRUERESU
-            recordsNumber=(header['recordsNumber'])
-            recordDuration=(header['recordDuration'])
-            Events=(resu['Events'])
-            eventSeven=filter(lambda event : event.type ==7, Events)
-            TrueMicroEveil=filter(lambda event : event.sous_type == 1, eventSeven)
-            
-
-
-            abcd=F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil)
-            matricescoreuse=abcd[1]
-            deepLearning=abcd[2]
-
-            bbbb=F1ScoreBetweenResuAndDeepsleep(matricescoreuse,deepLearning)
-            print(bbbb)
-
-            # plt.plot(label)
-            # plt.show()
 
             # plt.plot(prediction)
             # plt.show()
@@ -246,12 +219,9 @@ def F1ScoreBetweenResuAndDeepsleep(matricescoreuse,deepLearning):
     print(type(label))
     print("shape label"+str(label.shape))
 
-    prediction = np.loadtxt(deepLearning,delimiter='\t',comments=None,encoding='utf-8',ndmin=1)
-    print(type(prediction))
-    print("shape predict"+str(prediction.shape))
-
-    precision, recall, thresholds =metrics.precision_recall_curve(label,prediction)
-    f1_scores = 2*recall*precision/(recall+precision)
+            return
+>>>>>>> f0a20697ba9407af705f3dffd9565f8e6aee1e42
+            
 
     print(f1_scores)
     print('Best threshold: ', thresholds[np.argmax(f1_scores)])

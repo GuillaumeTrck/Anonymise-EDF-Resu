@@ -2,6 +2,7 @@ import argparse
 from datetime import datetime
 import glob
 import os
+
 def initLogs(logs):
     global logName
     if (logs):
@@ -56,7 +57,6 @@ def initPaths(mainFile):
     global NONAA_PATH
     
     CURRENT_PATH = os.path.dirname(os.path.realpath(mainFile))
-
     #For Testpredict.py
     DEEPSLEEP_PATH = os.path.join(CURRENT_PATH, 'DeepSleep')
     DATA_PATH = os.path.join(DEEPSLEEP_PATH, 'dataEDF')
@@ -68,19 +68,19 @@ def initPaths(mainFile):
     return
 
 def checkAnonymisation() :
-    EDFListRef=glob.glob("*.EDF")
-    EDFListNew=glob.glob("New/*.EDF")
-    resuListNew=glob.glob("New/*.resu")  
-    resuListRef=glob.glob("*.resu") 
-
-    for edfRef in EDFListRef:
-        fid = open(edfRef, "rb")
+    #Check if anonymisation->unanonymisation was successfull
+    #Put original files in local directory 
+    #Put modified files in ./New
+    ListRef=glob.glob("*.EDF")
+    ListRef.append(glob.glob("*.resu")) 
+    for Ref in ListRef:
+        fid = open(Ref, "rb")
         stringRef = fid.read()    
         fid.close()
-        fid = open("New/" + edfRef.upper(), "rb")
+        fid = open("New/" + Ref, "rb")
         stringNew = fid.read()    
         fid.close()
         if stringRef != stringNew:
-            print("diff avec " + edfRef)
+            print("diff avec " + Ref)
     return
 

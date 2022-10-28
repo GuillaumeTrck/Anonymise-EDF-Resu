@@ -1,0 +1,25 @@
+resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID
+Data/Anonym\BAHAAZI0-20220127.resu	27/01/2022	912 	BA227010              	630701FB12            	BAHASSOU                   	AZIZA                      	01/07/1963	F	1
+Data/Anonym\BATSJOS0-20220111.resu	11/01/2022	913 	BJ311010              	560214MB05            	BATSINDA                   	JOSEPH                     	14/02/1956	M	2
+Data/Anonym\BECKFRA0-20220130.resu	30/01/2022	913 	BF330010              	800212MB01            	BECKERS                    	FRANCOIS LUDWIG            	12/02/1980	M	3
+Data/Anonym\BECKPAT0-20220116.resu	16/01/2022	913 	BP316010              	490810MB01            	BECKERS-VAN DEN HAUTE      	PATRICK LAURENT            	10/08/1949	M	4
+Data/Anonym\BENSALA0-20220111.resu	11/01/2022	915 	BA511010              	020921MB03            	BEN SENNAH                 	ALAE                       	21/09/2002	M	5
+Data/Anonym\BOUNRED0-20220115.resu	15/01/2022	915 	BR515010              	741124MB06            	BOUNAAZOUZ                 	REDOUAN                    	24/11/1974	M	6
+Data/Anonym\BAHAAZI0-20220127.resu	27/01/2022	912 	BA227010              	630701FB12            	BAHASSOU                   	AZIZA                      	01/07/1963	F	7
+Data/Anonym\BATSJOS0-20220111.resu	11/01/2022	913 	BJ311010              	560214MB05            	BATSINDA                   	JOSEPH                     	14/02/1956	M	8
+Data/Anonym\BECKFRA0-20220130.resu	30/01/2022	913 	BF330010              	800212MB01            	BECKERS                    	FRANCOIS LUDWIG            	12/02/1980	M	9
+Data/Anonym\BECKPAT0-20220116.resu	16/01/2022	913 	BP316010              	490810MB01            	BECKERS-VAN DEN HAUTE      	PATRICK LAURENT            	10/08/1949	M	10
+Data/Anonym\BENSALA0-20220111.resu	11/01/2022	915 	BA511010              	020921MB03            	BEN SENNAH                 	ALAE                       	21/09/2002	M	11
+Data/Anonym\BOUNRED0-20220115.resu	15/01/2022	915 	BR515010              	741124MB06            	BOUNAAZOUZ                 	REDOUAN                    	24/11/1974	M	12
+Data/Anonym\BAHAAZI0-20220127.resu	27/01/2022	912 	BA227010              	630701FB12            	BAHASSOU                   	AZIZA                      	01/07/1963	F	13
+Data/Anonym\BATSJOS0-20220111.resu	11/01/2022	913 	BJ311010              	560214MB05            	BATSINDA                   	JOSEPH                     	14/02/1956	M	14
+Data/Anonym\BECKFRA0-20220130.resu	30/01/2022	913 	BF330010              	800212MB01            	BECKERS                    	FRANCOIS LUDWIG            	12/02/1980	M	15
+Data/Anonym\BECKPAT0-20220116.resu	16/01/2022	913 	BP316010              	490810MB01            	BECKERS-VAN DEN HAUTE      	PATRICK LAURENT            	10/08/1949	M	16
+Data/Anonym\BENSALA0-20220111.resu	11/01/2022	915 	BA511010              	020921MB03            	BEN SENNAH                 	ALAE                       	21/09/2002	M	17
+Data/Anonym\BOUNRED0-20220115.resu	15/01/2022	915 	BR515010              	741124MB06            	BOUNAAZOUZ                 	REDOUAN                    	24/11/1974	M	18
+Data/Anonym\BAHAAZI0-20220127.resu	27/01/2022	912 	BA227010              	630701FB12            	BAHASSOU                   	AZIZA                      	01/07/1963	F	19
+Data/Anonym\BATSJOS0-20220111.resu	11/01/2022	913 	BJ311010              	560214MB05            	BATSINDA                   	JOSEPH                     	14/02/1956	M	20
+Data/Anonym\BECKFRA0-20220130.resu	30/01/2022	913 	BF330010              	800212MB01            	BECKERS                    	FRANCOIS LUDWIG            	12/02/1980	M	21
+Data/Anonym\BECKPAT0-20220116.resu	16/01/2022	913 	BP316010              	490810MB01            	BECKERS-VAN DEN HAUTE      	PATRICK LAURENT            	10/08/1949	M	22
+Data/Anonym\BENSALA0-20220111.resu	11/01/2022	915 	BA511010              	020921MB03            	BEN SENNAH                 	ALAE                       	21/09/2002	M	23
+Data/Anonym\BOUNRED0-20220115.resu	15/01/2022	915 	BR515010              	741124MB06            	BOUNAAZOUZ                 	REDOUAN                    	24/11/1974	M	24

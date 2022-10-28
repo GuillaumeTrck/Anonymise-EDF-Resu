@@ -1,202 +1,144 @@
 import numpy as np
 import os
-from utils import printLogs
+from utils import printLogs, initLogs
 import glob
 import argparse
-from utils import *
-
-initLogs("LogsAnonyme.txt")
-parser=argparse.ArgumentParser(description='Anomyse/Unanomyse EDF and resu')
-parser.add_argument('-f','--file',required=True,help="File with EDF and resu")
-parser.add_argument('-a','--anomyse', required=False,action="store_true", help="Anomyse edf and resu")
-parser.add_argument('-d','--EDFData', required=False, help="Edf data text name")
-parser.add_argument('-v','--resuData', required=False, help="resu data text name")
-parser.add_argument('-u','--unAnomyse', required=False,action="store_true", help="Unanomyse edf and resu")
-
-args=parser.parse_args()
 
 
-anomyse=args.anomyse
-unAnomyse=args.unAnomyse
-file=args.file
-os.chdir(file)
-
-if args.EDFData:
-    EDFData=args.EDFData
-else:
+def UN(EDFDB, resuDB, directory):  
+    #unanonymiser edf et resu (nom et données)  
     try:
-        EDFData="EDFDatadefault.txt"
-        fid=open(EDFData,'a')
-        fid.close()
-    except:
-        printLogs("Le fichier txt n'a pas été créé")
-
-if args.resuData:
-    resuData=args.resuData
-else:
-    try:
-        resuData="resuDataDefault.txt"
-        fid=open(resuData,'a')
-        fid.close()
-    except:
-        printLogs("Le fichier txt n'a pas été créé")
-
-
-#6 unanonymiser edf et resu (nom et données)
-def UN():    
-    EDFList=glob.glob("RawAnonyme*.EDF")
-    resuList=glob.glob("resuAnonyme*.resu")
-
-    try:
-        matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-        matriceresu=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    except:
-        printLogs("Les matrices EDF et resu ne sont pas chargées")
-
-    
+        matriceEDF=np.loadtxt(EDFDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+        matriceresu=np.loadtxt(resuDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    except Exception as e:
+        printLogs("Error with EDF or resu loading in UN() : " + str(e) + "\n End of the procedure")
+        return
+    EDFList=glob.glob(os.path.join(directory, "RawAnonyme*.EDF"))
+    resuList=glob.glob(os.path.join(directory, "resuAnonyme*.resu"))
     for i in range(len(resuList)):
-
         #1 récupérer ID du fichier
-        
-        
-        resuAnonymeName=resuList[i]
+        resuAnonymeName=os.path.basename(resuList[i])
         resuAnonymeName=resuAnonymeName.replace(".resu","")
         IDFichierAnonyme=resuAnonymeName[11:]
         #2 voir où se trouve le fichier dans datafile
-        posEDF=CheckInDataFile(matriceEDF,IDFichierAnonyme)
         posResu=CheckInDataFile(matriceresu,IDFichierAnonyme)
+        originalResuName=resuList[i]
         
-        
+        originalResuName = ChangeAnonymeToName(originalResuName,matriceresu,posResu)
         #3 changer les noms anonymes et les données des edf et resu
-        terminasonEDF='.EDF'
-        terminaisonResu='.resu'
-        originalEDFName=glob.glob('RawAnonyme'+IDFichierAnonyme+terminasonEDF)
-        originalResuName=glob.glob('resuAnonyme'+IDFichierAnonyme+terminaisonResu)
-        print(originalEDFName)
-        print(originalResuName)
-        posEDF=int(posEDF)
-        print(posEDF)
-        posResu=int(posResu)
-        print(posResu)
-        originalsNames=ChangeAnonymeToName(originalResuName[0],originalEDFName[0], matriceEDF,matriceresu,posResu, posEDF)
-        UnAnonymiseEDF(originalsNames[1],matriceEDF,posEDF)
-        UnAnonymiseResu(originalsNames[0],matriceresu,posResu)
-        posEDF=int(posEDF)
-        posResu=int(posResu)
+        originalEDFName=glob.glob(os.path.join(os.path.dirname(resuList[i]),'RawAnonyme'+IDFichierAnonyme+'.EDF'))
+        if originalEDFName:
+            posEDF=CheckInDataFile(matriceEDF,IDFichierAnonyme)
+            originalEDFName = ChangeAnonymeToName(originalEDFName[0],matriceEDF,posEDF)
+            UnAnonymiseEDF(originalEDFName,matriceEDF,posEDF)
+        try:
+            UnAnonymiseResu(originalResuName,matriceresu,posResu)
+        except Exception as e : 
+            print("error with unanonymiseEdf/Resu() : " + str(e) + "\n End of the procedure")
     return
 
-def AN():    
-
-    EDFList=glob.glob("*.EDF")
-    resuList=glob.glob("*.resu")
-    print(resuList)
-    print(EDFList)
-
-    test=FirstLineEDF(EDFData)
-
+def AN(EDFDB, resuDB, directory):    
     try:
-        test1=FirstLineresu(resuData)
-    except:
-        printLogs("Problème chargement resuData")
-
-    if test and test1:
+        bEDF=WriteFirstLine(EDFDB, "EDF/EDFHeader/champs identification/Date/ID\n")
+    except Exception as e:
+        printLogs("Error with WriteFirstLine(EDFDB) :" + str(e) + "\n End of the procedure")
+        return
+    try:
+        bResu=WriteFirstLine(resuDB, "resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID\n")
+    except Exception as e:
+        printLogs("Error with WriteFirstLine(resuDB) :" + str(e) + "\n End of the procedure")
+        return
+    if bResu and bEDF :
         ID = 1
     else :
-        ID = CheckID(EDFData,resuData)
-
+        try:
+            ID = CheckID(EDFDB,resuDB)
+        except Exception as e :
+            printLogs("Error with CheckID :" + str(e) + "\n End of the procedure")
+            return
+    EDFList=glob.glob(os.path.join(directory, "*.EDF"))
+    resuList=glob.glob(os.path.join(directory, "*.resu"))
     for resu in resuList:
-        var=saveDataresu(resu,resuData,ID)
-        if var:
-            
+        try:
+            RawFileName=saveDataresu(resu,resuDB,ID)
+        except Exception as e: 
+            printLogs("Error with saveDataresu() :" + str(e) + "\n End of the procedure")
+            return
+        try:
+            AnonymiseResu(resu)
+        except:
+            printLogs("Error with AnonymiseResu() :" + str(e) + "\n End of the procedure")
+            return
+        ChangeNameToAnonyme(resu,ID, 'resu')    
+        if RawFileName:
             #1. récupérer edfname
-            try:
-                fid = open(resu, "rb")
-            except:
-                printLogs("Problème ouverture resu") 
-
-            fid.seek(144)
-            RawFileName= fid.read(22).decode('unicode_escape')
-            RawFileNameStrip=RawFileName.replace(" ","")
-            fid.close()
-            
+            RawFileName=RawFileName.replace(" ","")
             #2. trouver l'edf 
-            term='.EDF'
-            RawFileNameStripTerm=RawFileNameStrip + term
-            EDFName=glob.glob(RawFileNameStripTerm)
-            if EDFName:
+            RawFileName=RawFileName + '.EDF'
+            RawFileName = os.path.join(directory, RawFileName)
+            if glob.glob(RawFileName):
                 #3 savedataedf
-                saveDataEDF(RawFileNameStripTerm,EDFData,ID)
+                try :
+                    bOK=saveDataEDF(RawFileName,EDFDB,ID) # if false : already saved
+                except Exception as e:
+                    printLogs("Error with saveDataEDF() :" + str(e) + "\n End of the procedure")
+                    return
                 #4 Anonymise edf et resu (nom et données)
-                try:
-                    AnonymiseEDF(RawFileNameStripTerm)
-                except:
-                    printLogs("Problème anonymisation EDF")
-                try:
-                    AnonymiseResu(resu)
-                except:
-                    printLogs("Problème anonymisation resu")
-
-                anonymeNames=ChangeNameToAnonyme(resu,RawFileNameStripTerm,ID)
-            else : 
-                printLogs("Pas de fichier EDF associé à ce resu.")
-            #5 incrémenter l'ID
-            ID=int(ID)
-            ID=ID+1
+                if bOK:
+                    try:
+                        AnonymiseEDF(RawFileName)
+                    except:
+                        printLogs("Error with AnonymiseEDF() :" + str(e) + "\n End of the procedure")
+                        return
+                    ChangeNameToAnonyme(RawFileName,ID, 'edf')
+        else : 
+            printLogs("No EDF file with this resu.")
+        #5 incrémenter l'ID
+        ID=int(ID)
+        ID=ID+1
     return
 
 def AnonymiseEDF(EDFName):                                 
-    x='xxxxxxxxxxxxxxxxxxxxxx.EDF'
-    if x in EDFName:
-        print("Fichier EDF déjà anonyme")
-    else:
-        EDF = open(EDFName, "r+")
-        EDF.seek(8)                                            
-        sss = "x" * 8 + "##" + "xxxxxxxx" + "##"
-        EDF.write(sss)
-        EDF.seek(28)
-        sss = "010101MX00             "+" "*38 #22 carac en tout 
-        EDF.write(sss)
-        EDF.seek(88)
-        sss="Erasme-ULB-Endymion##C03.56##20##01/01/2001##000##P9&10#202#"
-        EDF.write(sss)
-
-        # EDF.seek(122)
-        # sss = "01/01/2001" + " "*36
-        
-        EDF.seek(168)
-        sss = "01/01/01"
-        EDF.write(sss)
-        EDF.close()
+    EDF = open(EDFName, "r+")
+    EDF.seek(8)                                            
+    sss = "x" * 8 + "##" + "xxxxxxxx" + "##"
+    EDF.write(sss)
+    EDF.seek(28)
+    sss = "010101MX00             "+" "*38 #22 carac en tout 
+    EDF.write(sss)
+    EDF.seek(88)
+    sss="Erasme-ULB-Endymion##C03.56##20##01/01/2001##000##P9&10#202#"
+    EDF.write(sss)
+    EDF.seek(168)
+    sss = "01/01/01"
+    EDF.write(sss)
+    EDF.close()
     return 
 
 def AnonymiseResu(resuName):                                                                     
-    x='resuAnonyme'
-    if x in resuName:
-        print("Fichier resu déjà anonyme")
-    else:
-        resu=open(resuName,'r+')
-        resu.seek(24)                                           
-        sss = "01/01/2001"
-        resu.write(sss)
-        resu.seek(48)                                         
-        sss="0000"
-        resu.write(sss)
-        resu.seek(144)
-        sss = "x" * 22
-        resu.write(sss)
-        resu.seek(1922)
-        sss = "010101MX00" + " "*12
-        resu.write(sss)
-        resu.seek(1944)
-        sss = "x" * 54
-        resu.write(sss)
-        resu.seek(1998)
-        sss = "01/01/2001"
-        resu.write(sss)
-        resu.seek(2008)
-        sss = "M" 
-        resu.write(sss)
-        resu.close()
+    resu=open(resuName,'r+')
+    resu.seek(24)                                           
+    sss = "01/01/2001"
+    resu.write(sss)
+    resu.seek(48)                                         
+    sss="0000"
+    resu.write(sss)
+    resu.seek(144)
+    sss = "x" * 22
+    resu.write(sss)
+    resu.seek(1922)
+    sss = "010101MX00" + " "*12
+    resu.write(sss)
+    resu.seek(1944)
+    sss = "x" * 54
+    resu.write(sss)
+    resu.seek(1998)
+    sss = "01/01/2001"
+    resu.write(sss)
+    resu.seek(2008)
+    sss = "M" 
+    resu.write(sss)
+    resu.close()
     return      
 
 def UnAnonymiseEDF(EDFName,matriceEDF,a):                    
@@ -223,32 +165,16 @@ def UnAnonymiseResu(resuName,matriceresu,a):
     resu.close() 
     return
                                          
-def saveDataresu(resuName,resuData,ID):
-    x='resuAnonyme'
-    try:
-        matriceresu=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    except:
-        printLogs("Problème chargement matrice resu")
-
-    if x in resuName:
+def saveDataresu(resuName,resuDB,ID):
+    if 'resuAnonyme' in resuName:
         print("Fichier resu déjà sauvé")
         return False
     else:
-    # Writing data
-        print("J'ai bien sauvé les données")
-        try:
-            dataFile = open(resuData, 'a')
-        except:
-            printLogs("Problème ouverture resuData")
-
+        matriceresu=np.loadtxt(resuDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+        dataFile = open(resuDB, 'a')
         dataFile.write(resuName) 
         dataFile.write('\t')
-
-        try :
-            fid = open(resuName, "rb")
-        except:
-            printLogs("Problème ouverture resu")
-
+        fid = open(resuName, "rb")
         resu = {}
         fid.seek(24)
         resu['ExamDate'] = fid.read(10).decode('unicode_escape')
@@ -282,33 +208,19 @@ def saveDataresu(resuName,resuData,ID):
         dataFile.write('\n')
         fid.close()
         dataFile.close()
+    return resu['RawFileName']
 
-    return True
-
-def saveDataEDF(RawFileName, EDFData,ID):
-    x='xxxxxxxxxxxxxxxxxxxxxx.EDF'
-    try:
-        matriceEDF=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
-    except:
-        printLogs("Problème chargement matrice EDF")
-
-    if x in RawFileName:
+def saveDataEDF(RawFileName, EDFDB,ID):
+    matriceEDF=np.loadtxt(EDFDB,delimiter='\t',comments=None,encoding='utf-8',dtype='U',skiprows=1,ndmin=2)
+    if 'RawAnonyme' in RawFileName:
         print("Fichier EDF déjà sauvé")
-        return
+        return False
     else:
-    # Writing data
-        try:
-            dataFile = open(EDFData, "a")
-        except:
-            printLogs("Problème ouverture EDFData")
+    # Writing datae
+        dataFile = open(EDFDB, "a")
         dataFile.write(RawFileName)
         dataFile.write('\t')
-        
-        try:
-            EDF = open(RawFileName, "rb")
-        except:
-            printLogs("Problème ouverture EDF")       
-
+        EDF = open(RawFileName, "rb")
         EDF.read(8)
         EDFText = EDF.read(168).decode('unicode_escape')    
         EDF.close()
@@ -321,88 +233,79 @@ def saveDataEDF(RawFileName, EDFData,ID):
         dataFile.write(str(ID))
         dataFile.write('\n')
         dataFile.close()
+    return True
 
-    return
-
-def FirstLineEDF(EDFData):
-
-    try:
-        dataFile = open(EDFData, 'rb')
-    except:
-        printLogs("Problème ouverture fichier EDFData")
-    
-    ligne1=dataFile.readlines(1)
-
-    # Writting the first line
-    if not ligne1:
-        try:    
-            dataFile = open(EDFData, 'w')
-        except:
-            printLogs("Problème ouverture fichier EDFData")
-
-        dataFile.write("EDF/EDFHeader/champs identification/Date/ID")
-        dataFile.write('\n')
+def WriteFirstLine(DB, FirstLine):
+    #return true  if ID must be one and false if ID must be identified
+    dataFile = open(DB, 'rb')
+    line1=dataFile.readlines(1)
+    dataFile.close()
+    if not line1:    
+        dataFile = open(DB, 'w')
+        dataFile.write(FirstLine)
         dataFile.close()
-
         return True
     else:
-        return False 
+        return False
 
-def FirstLineresu(resuData):
-
-    dataFile = open(resuData, 'rb') 
-    ligne2=dataFile.readlines(1)
-
-    # Writting the first line
-    if not ligne2:
-        dataFile = open(resuData, 'w')
-        dataFile.write("resuName/Date/Chambre/EDFName/FileNumber/Name/FirstName/BirthDate/Sex/ID")
-        dataFile.write('\n')
-        dataFile.close()
-        
-        return True
-    else:
-        return False 
-
-def CheckID(EDFData,resuData):
-
-    matriceEDFID=np.loadtxt(EDFData,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=4,ndmin=2)
+def CheckID(EDFDB,resuDB):
+    matriceEDFID=np.loadtxt(EDFDB,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=4,ndmin=2)
     EDFID = int(max(matriceEDFID) +1)
-
-    matriceresuID=np.loadtxt(resuData,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=9,ndmin=2)
+    matriceresuID=np.loadtxt(resuDB,delimiter='\t',comments=None,encoding='utf-8',skiprows=1,usecols=9,ndmin=2)
     resuID = int(max(matriceresuID) +1)
-
     return max([EDFID,resuID])
 
-def ChangeNameToAnonyme(resuName, rawFileName, ID): 
-    
-    x='resuAnonyme'
-    if x in resuName:
-        print("Noms resu déjà anonyme")
-        return
-    else:
-        resuAnonymeFileName="resuAnonyme{0}.resu".format(ID)                      
-        os.rename(resuName,resuAnonymeFileName)   
-        rawAnonymeFileName = "RawAnonyme{0}.EDF".format(ID)               
-        os.rename(rawFileName,rawAnonymeFileName)
-        print("J'ai bien changé le nom")
-    return [resuAnonymeFileName,rawAnonymeFileName]
+def ChangeNameToAnonyme(Name, ID, type):
+    if type == 'resu':
+        NewName="resuAnonyme{0}.resu".format(ID)          
+    elif type== 'edf':
+        NewName="RawAnonyme{0}.EDF".format(ID)     
+    else : 
+        NewName="UnknownAnonyme{0}.resu".format(ID)    
+    NewName = os.path.join(os.path.dirname(Name), NewName)
+    os.rename(Name, NewName)
+    return 
 
-def ChangeAnonymeToName(resuAnonyme,rawAnonyme, matriceEDF,matriceresu,iResu,iEDF) :
-    resuFileName=matriceresu[iResu][0]
-    os.rename(resuAnonyme,resuFileName)
-    EDFFileName=matriceEDF[iEDF][0]
-    os.rename(rawAnonyme,EDFFileName)
 
-    return [resuFileName,EDFFileName] 
+def ChangeAnonymeToName(AnonymFile, matrix,ID) :
+    FileName=matrix[ID][0]
+    os.rename(AnonymFile,FileName)
+    return FileName
 
 def CheckInDataFile(matriceData,IDFichierAnonyme):
     i=np.where(matriceData==IDFichierAnonyme)
-    #print("i= {}".format(i))
-    return i[0]
+    return int(i[0])
 
-if (args.unAnomyse):
-    UN()
+if __name__ == '__main__':
+    initLogs("LogsAnonyme.txt")
+    parser=argparse.ArgumentParser(description='Anomyse/Unanomyse EDF and resu')
+    parser.add_argument('-d','--dir',required=True,help="Directory containing EDF and resu files")
+    parser.add_argument('-a','--anonym', required=False,action="store_true", help="Anonymise edf and resu")
+    parser.add_argument('-e','--EDFDB', required=False, help="Edf data text name")
+    parser.add_argument('-r','--resuDB', required=False, help="resu data text name")
+    parser.add_argument('-u','--unanonym', required=False,action="store_true", help="Unanonymise edf and resu")
+    args=parser.parse_args()
 
-elif(args.anomyse):
-    AN()
+    if args.EDFDB:
+        EDFDB=args.EDFDB
+    else:
+        try:
+            EDFDB="EDFDatadefault.txt"
+            fid=open(EDFDB,'a')
+            fid.close()
+        except Exception as e:
+            printLogs("Error with EDFDatadefault.txt creation : " + str(e) + "\n End f the procedure")
+            exit()
+    if args.resuDB:
+        resuDB=args.resuDB
+    else:
+        try:
+            resuDB="resuDataDefault.txt"
+            fid=open(resuDB,'a')
+            fid.close()
+        except Exception as e:
+            printLogs("Error with resuDatadefault.txt creation : " + str(e) + "\n End f the procedure")
+    if (args.unanonym):
+        UN(EDFDB, resuDB, args.dir)
+    elif(args.anonym):
+        AN(EDFDB, resuDB, args.dir)
