@@ -1,6 +1,6 @@
 OUTDATED_IGNORE=1
 import mne
-import yasa
+#import yasa
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -144,46 +144,87 @@ def StagesAnalysis(resu,raw,header):
     return
 
 def ArousalAnalysis(resu,raw,header):
-            print(header['labels'])
-            #Uniform
-            
+        print(header['labels'])
+        #Uniform
+        
 
-            chanels=[]
-            if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' and 'Frq.car.' and 'EMG jamb.1' and 'EMG jamb.2' in header['labels']:
-                chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG','Frq.car.','EMG jamb.1','EMG jamb.2')
-                printLogs("All chanels for arousal analysis selected")
-                # print (chanels[0:])
-            else : 
-                printLogs("Prob chanels for arousal analysis")
-            
-            # if 'EEG F4' and 'EEG C4' and 'EEG O2' in header['labels']:
-            #      chanels=('EEG F4','Amp Abd','ECG','Flux Nas','EMG menton')
-            raw.pick_channels(chanels)
-            #printEDFGraph(raw)
-            info = raw.info
-            #print(info)
-            print(info['ch_names'])
-            new_raw=raw.get_data()
-            print("info raw" +str(new_raw.shape))
-            #a = uniformEDF(new_raw) 
-            #print(a.shape)
+        chanels=[]
+        if 'EEG F4' and 'EEG C4' and 'EEG O2' and 'EOG Droit' and 'EMG menton'and 'Amp Abd'and 'Amp Thx'and 'Flux Nas'and 'Sao2'and 'ECG' and 'Frq.car.' and 'EMG jamb.1' and 'EMG jamb.2' in header['labels']:
+            chanels=('EEG F4','EEG C4','EEG O2','EOG Droit','EMG menton','Amp Abd','Amp Thx','Flux Nas','Sao2','ECG','Frq.car.','EMG jamb.1','EMG jamb.2')
+            printLogs("All chanels for arousal analysis selected")
+            # print (chanels[0:])
+        else : 
+            printLogs("Prob chanels for arousal analysis")
+        
+        # if 'EEG F4' and 'EEG C4' and 'EEG O2' in header['labels']:
+        #      chanels=('EEG F4','Amp Abd','ECG','Flux Nas','EMG menton')
+        raw.pick_channels(chanels)
+        #printEDFGraph(raw)
+        info = raw.info
+        #print(info)
+        print(info['ch_names'])
+        new_raw=raw.get_data()
+        print("info raw" +str(new_raw.shape))
+        #a = uniformEDF(new_raw) 
+        #print(a.shape)
 
-            #Predict
-            #b= predictEDF(a,args.edf,new_raw)
+        #Predict
+        #b= predictEDF(a,args.edf,new_raw)
 
-            # plt.plot(prediction)
-            # plt.show()
+        
+        #comparaison
+        label=np.loadtxt("resu.vec", dtype=int)
+        print("labelshape"+str(label.shape))
+        prediction=np.loadtxt(os.path.join(u.NONAA_PATH,'BR515010.EDF.vec'),dtype=float)
+        print("predictionshape"+str(prediction.shape))
+        auc = metrics.roc_auc_score(label,prediction)
+        print(auc)
+        fpr, tpr, _ = metrics.roc_curve(label,prediction)
+        plt.plot(fpr, tpr)
+        plt.ylabel('True Positive Rate')
+        plt.xlabel('False Positive Rate')
+        plt.show()
 
-            # auc = metrics.roc_auc_score(label,prediction)
-            # print(auc)
-            # fpr, tpr, _ = metrics.roc_curve(label,prediction)
-            # plt.plot(fpr, tpr)
-            # plt.ylabel('True Positive Rate')
-            # plt.xlabel('False Positive Rate')
-            # plt.show()
-            
 
-            return
+        #TRUERESU
+        recordsNumber=(header['recordsNumber'])
+        recordDuration=(header['recordDuration'])
+        Events=(resu['Events'])
+        eventSeven=filter(lambda event : event.type ==7, Events)
+        TrueMicroEveil=filter(lambda event : event.sous_type == 1, eventSeven)
+
+
+
+        abcd=F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil)
+        matricescoreuse=abcd[1]
+        matriceAA=abcd[2]
+        
+        # bbbb=F1ScoreBetweenResuAndDeepsleep(matricescoreuse,prediction)
+        # print(bbbb)
+
+        New_matriceAA=assambleArousals(matriceAA)
+        New_matriceAA=selectGoodArousals(matriceAA)
+        
+        #dddd=assambleArousals(matriceDeepLearning)
+        
+        
+        
+        # plt.plot(label)
+        # plt.show()
+
+        # plt.plot(prediction)
+        # plt.show()
+
+        # auc = metrics.roc_auc_score(label,prediction)
+        # print(auc)
+        # fpr, tpr, _ = metrics.roc_curve(label,prediction)
+        # plt.plot(fpr, tpr)
+        # plt.ylabel('True Positive Rate')
+        # plt.xlabel('False Positive Rate')
+        # plt.show()
+
+
+        return
             
 def F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil):
     #1 trouver les fichiers
@@ -214,15 +255,15 @@ def F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil):
     plt.show()
     return comparaison,matricescoreuse,matriceAA
 
-def F1ScoreBetweenResuAndDeepsleep(matricescoreuse,deepLearning):
+def F1ScoreBetweenResuAndDeepsleep(matricescoreuse,prediction):
     label=matricescoreuse
     print(type(label))
     print("shape label"+str(label.shape))
-
-            return
->>>>>>> f0a20697ba9407af705f3dffd9565f8e6aee1e42
-            
-
+    #prediction = np.loadtxt(prediction,delimiter='\t',comments=None,encoding='utf-8',ndmin=1)
+    print(type(prediction))
+    print("shape predict"+str(prediction.shape))
+    precision, recall, thresholds =metrics.precision_recall_curve(label,prediction)
+    f1_scores = 2*recall*precision/(recall+precision)
     print(f1_scores)
     print('Best threshold: ', thresholds[np.argmax(f1_scores)])
     print('Best F1-Score: ', np.max(f1_scores))

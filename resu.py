@@ -287,6 +287,74 @@ def resuToVec(resuName,recordsNumber,recordDuration,microEveil):
     # print("vecvec")
     return A
 
+def assambleArousals(matriceAA):
+    print(matriceAA.shape)
+    #print(matriceAA)
+
+    # Create an array that is 1 where a is 0, and pad each end with an extra 0.
+    iszero = np.concatenate(([0], np.equal(matriceAA, 0).view(np.int8), [0]))
+    absdiff = np.abs(np.diff(iszero))
+    # Runs start and end where absdiff is 1.
+    ranges = np.where(absdiff == 1)[0].reshape(-1, 2)
+    print(ranges)
+    last=(ranges[-1][0])
+    lastLast=(ranges[-1][1])
+    lastValue=lastLast-last
+    print(lastValue)
+
+    for element in ranges:
+
+        if element[1]-element[0] == ranges[0][1]:
+            print("Skip la première vague de 0")
+
+        elif element[1]-element[0] == lastValue:
+            print("Skip la dernière vague de 0")
+
+        elif element[1]-element[0]<200:
+            print("trou")
+            print(element[0])
+            print(element[1])
+            matriceAA[element[0]:element[1]]=1
+        else:
+            print("Pas de trou")
+
+    iszero = np.concatenate(([0], np.equal(matriceAA, 0).view(np.int8), [0]))
+    absdiff = np.abs(np.diff(iszero))
+    rangesTwo = np.where(absdiff == 1)[0].reshape(-1, 2)
+    print(rangesTwo)
+    # print(matriceAA)
+    return matriceAA
+
+def selectGoodArousals(matriceAA):
+
+    iszero = np.concatenate(([0], np.equal(matriceAA, 1).view(np.int8), [0]))
+    absdiff = np.abs(np.diff(iszero))
+    ranges = np.where(absdiff == 1)[0].reshape(-1, 2)
+    print("tralala"+str(ranges))
+
+    for element in ranges:
+        print(element[1])
+        print(element[0])
+
+        if element[1]-element[0]>3000:
+            print("microeveiltroplong")
+            print(element[0])
+            print(element[1])
+            matriceAA[element[0]:element[1]]=0
+
+        elif element[1]-element[0]<600:
+            print("micro eveil trop court")
+            print(element[0])
+            print(element[1])
+            matriceAA[element[0]:element[1]]=0
+
+        else:
+            print("Pas de ME trop long ou trop court")
+
+    print(matriceAA)
+    
+    return matriceAA
+
 def saveResu(resu, resuName):
     Mot = []
     nMots = 12
