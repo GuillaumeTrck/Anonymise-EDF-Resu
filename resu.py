@@ -365,42 +365,36 @@ def selectGoodArousals(matriceAA):
 def transposeVecToResu(ReadFalseResu,listeMEDeepSleep):
 
     #1 Supprimer ME AA
-    AAEvents=(ReadFalseResu['Events'])  
-    for element in AAEvents:
-        if element.type==7 and element.sous_type==1:
-            #print(element)
-            AAEvents.remove(element)
-    print(len(AAEvents))
-
+    NbEvents=ReadFalseResu['Events'].clear()
+    
     #2 Ajouter ME deeplearning
-    i=0
-    for microEveil in listeMEDeepSleep:
-        newEv = Event()
-        newEv.type = 7
-        newEv.sous_type = 1
-        newEv.sous_type2 = 0
-        newEv.debut.temps=listeMEDeepSleep[i][0]
-        newEv.debut.ecg=37
-        
-        newEv.reprise.temps=listeMEDeepSleep[i][1]
-        newEv.reprise.sao2=37
-        newEv.reprise.ecg=37
 
-        newEv.minsao2.temps=listeMEDeepSleep[i][1]
-        newEv.minsao2.sao2=37
-        newEv.minsao2.ecg=37
+    newEv = Event()
+    newEv.type = 7
+    newEv.sous_type = 1
+    newEv.sous_type2 = 0
+    newEv.debut.temps=25125
+    newEv.debut.ecg=37
+    
+    newEv.reprise.temps=25300
+    newEv.reprise.sao2=37
+    newEv.reprise.ecg=37
 
-        newEv.fin.temps=listeMEDeepSleep[i][1]
-        newEv.fin.ecg=37
-        newEv.fin.sao2=37
+    newEv.minsao2.temps=25300
+    newEv.minsao2.sao2=37
+    newEv.minsao2.ecg=37
 
-        print(newEv)
-        AAEvents.append(newEv)
-        i=i+1
+    newEv.fin.temps=25300
+    newEv.fin.ecg=37
+    newEv.fin.sao2=37
 
-    print(len(AAEvents))
+    print(newEv)
+    ReadFalseResu['Events'].append(newEv)
 
-    return AAEvents
+    print(ReadFalseResu['Events'])
+    
+
+    return NbEvents
 
 def saveResu(resu, resuName):
 
