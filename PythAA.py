@@ -213,9 +213,54 @@ def ArousalAnalysis(resu,raw,header):
         
         listeMEDeepSleep=New_matriceDeepSleep[1]
         print(listeMEDeepSleep)
-        delMEAA=transposeVecToResu(ReadFalseResu,listeMEDeepSleep)   #delete ME AA and add ME Deepsleep
-        saveNewMEDeepSleep=saveResu(ReadFalseResu,ResuAAName)
         
+        
+        
+        #Check la taille du fichier resu
+        print(f'File Size in Bytes is {file_stats.st_size}')
+        print(type(ReadFalseResu))
+
+
+        #check le nb d'event header
+        print("voici le nb events ds header")
+        fid=open('BOUNRED0-20220115.resu','rb')
+        resu = {}
+        fid.seek(60)
+        resu['pEvents'] = fid.read(6)
+        fid.seek(66)
+        resu['EventsNumber'] = fid.read(6)
+        fid.close()
+
+        print(resu['pEvents'])
+        print(resu['EventsNumber'])
+
+        #delete ME AA and add ME Deepsleep
+        delMEAA=transposeVecToResu(ReadFalseResu,listeMEDeepSleep)
+
+        #Change valeur dans header
+        ReadFalseResu['EventsNumber']=1
+        print(ReadFalseResu['EventsNumber'])
+
+        #saveResu
+        veriff=saveResu(ReadFalseResu,'BOUNRED0-20220115.resu')
+
+
+        #verif si nouvel event dans le header
+        print("voici le nb events ds header")
+        fid=open('BOUNRED0-20220115.resu','rb')
+        ReadFalseResu = {}
+        fid.seek(60)
+        ReadFalseResu['pEvents'] = fid.read(6)
+        fid.seek(66)
+        ReadFalseResu['EventsNumber'] = fid.read(6)
+        fid.close()
+
+        print(ReadFalseResu['pEvents'])
+        print(ReadFalseResu['EventsNumber'])
+
+        #Check la taille du fichier resu
+        file_stats = os.stat('BOUNRED0-20220115.resu')
+        print(f'File Size in Bytes is {file_stats.st_size}')
         
         
         # plt.plot(label)
