@@ -403,6 +403,57 @@ def transposeVecToResu(ReadFalseResu,listeMEDeepSleep):
     return AAEvents
 
 def saveResu(resu, resuName):
+
+    print("-----------------------UintC--------------------------------------")
+    #1 tranformer les int en str puis en bytes
+    resu['pDescription']=f"{resu['pDescription']:06d}"
+    resu['pDescription']=bytes(resu['pDescription'],encoding="utf-8")
+
+    resu['pEvents']=f"{resu['pEvents']:06d}"
+    resu['pEvents']=bytes(resu['pEvents'],encoding="utf-8")
+    
+    resu['EventsNumber']=f"{resu['EventsNumber']:06d}"
+    resu['EventsNumber']=bytes(resu['EventsNumber'],encoding="utf-8")
+    
+    resu['epochsNumber']=f"{resu['epochsNumber']:05d}"
+    resu['epochsNumber']=bytes(resu['epochsNumber'],encoding="utf-8")
+
+    resu['lastEpoch']=f"{resu['lastEpoch']:05d}"
+    resu['lastEpoch']=bytes(resu['lastEpoch'],encoding="utf-8")
+
+    resu['FFTWindowsN']=f"{resu['FFTWindowsN']:02d}"
+    resu['FFTWindowsN']=bytes(resu['FFTWindowsN'],encoding="utf-8")
+    
+
+    #2 addition tous les bytes
+    bytesTotal=((resu['LastRecord'])+resu['FileStruct']+resu['AASoft']+resu['CorrectionSoft']+resu['ExamDate']+resu['BeginningHour']+ resu['pPatient']+resu['Room']
+    +resu['RawType']+ resu['pDescription']+resu['pEvents']+resu['EventsNumber']+ resu['RecordType']+resu['EpochLength']+resu['epochsNumber']
+    +resu['lastEpoch']+resu['FFTWindowsN']+resu['Channels']+resu['signalsValidity']+ resu['myo1Description']+resu['myo2Description']
+    +resu['myo3Description']+resu['myo4Description']+resu['CreationDate']+resu['EndymionVersion']+ resu['Examinator']+resu['RawFileName']
+    +resu['DeviceNumber']+resu['MiscBools']+ resu['Free1']+ resu['Free2']+ resu['Free3']+ resu['Free4']+resu['Flags']+resu['SleepVar']+resu['Free6']
+    +resu['A']+resu['FileNumber']+resu['Name']+resu['FirstName']+resu['BirthDate']+ resu['Sex']+resu['Free7'])
+    
+    #3 frombuffer pour tranformer en uintc
+    bytesTotal=np.frombuffer(bytesTotal,dtype='uintc')
+
+    #4 comparaison avec resu['Full'] = resu['Full'][0:resu['Int32Begin']]
+    resu['Full'] = resu['Full'][0:resu['Int32Begin']]
+    print("len Full")
+    print(len(resu['Full']))
+    print(type(resu['Full']))
+    print("len bytestotal")
+    print(len(bytesTotal))
+    print(type(bytesTotal))
+    i=0
+    for element in bytesTotal:
+        if element!=resu['Full'][i]:
+            print("element"+str(i)+"KO")
+            print(element)
+            print(resu['Full'][i])
+        i=i+1    
+    print("------------------------------------------------")
+
+
     Mot = []
     nMots = 12
     for i in range(nMots):
@@ -576,6 +627,5 @@ def saveResu(resu, resuName):
         MotF = np.vstack((MotF, Mot[i+1]))     
     values = (MotF.T).flatten()    
     values = np.concatenate((values, MotEvent), axis=0)
-    resu['Full'] = resu['Full'][0:resu['Int32Begin']]
-    values = np.concatenate((resu['Full'], values), axis=0)
+    values = np.concatenate((bytesTotal, values), axis=0)
     values.tofile(resuName)
