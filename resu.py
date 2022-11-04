@@ -1,7 +1,7 @@
 import numpy as np
 from pyrsistent import v
 import copy
-from operator import itemgetter, attrgetter
+from operator import itemgetter, attrgetter, truediv
 from utils import printLogs
 import fileinput
 import sys
@@ -24,6 +24,7 @@ class Event:
         self.type = 0
         self.sous_type = 0
         self.sous_type2 = 0
+        self.pe2 = 0
         self.Area = 0
         self.free = 0
         self.debut = Point()
@@ -296,24 +297,25 @@ def assambleArousals(matriceAA):
     absdiff = np.abs(np.diff(iszero))
     # Runs start and end where absdiff is 1.
     ranges = np.where(absdiff == 1)[0].reshape(-1, 2)
-    print(ranges)
+    #print(ranges)
     last=(ranges[-1][0])
     lastLast=(ranges[-1][1])
     lastValue=lastLast-last
-    print(lastValue)
+    print(lastValue)           #22 ?
+    
 
     for element in ranges:
 
         if element[1]-element[0] == ranges[0][1]:
-            print("Skip la première vague de 0")
-
+            #print("Skip la première vague de 0")
+            break
         elif element[1]-element[0] == lastValue:
-            print("Skip la dernière vague de 0")
-
+            #print("Skip la dernière vague de 0")
+            break
         elif element[1]-element[0]<200:
-            print("trou")
-            print(element[0])
-            print(element[1])
+            #print("trou")
+            # print(element[0])
+            # print(element[1])
             matriceAA[element[0]:element[1]]=1
         else:
             print("Pas de trou")
@@ -333,27 +335,72 @@ def selectGoodArousals(matriceAA):
     print("tralala"+str(ranges))
 
     for element in ranges:
-        print(element[1])
-        print(element[0])
+        # print(element[1])
+        # print(element[0])
 
         if element[1]-element[0]>3000:
-            print("microeveiltroplong")
-            print(element[0])
-            print(element[1])
+            # print("microeveiltroplong")
+            # print(element[0])
+            # print(element[1])
             matriceAA[element[0]:element[1]]=0
 
         elif element[1]-element[0]<600:
-            print("micro eveil trop court")
-            print(element[0])
-            print(element[1])
+            # print("micro eveil trop court")
+            # print(element[0])
+            # print(element[1])
             matriceAA[element[0]:element[1]]=0
 
         else:
             print("Pas de ME trop long ou trop court")
+            print(element[0])
+            print(element[1])
 
     print(matriceAA)
-    
-    return matriceAA
+    iszero = np.concatenate(([0], np.equal(matriceAA, 1).view(np.int8), [0]))
+    absdiff = np.abs(np.diff(iszero))
+    ranges = np.where(absdiff == 1)[0].reshape(-1, 2)
+
+    return matriceAA,ranges
+
+def transposeVecToResu(ReadFalseResu,listeMEDeepSleep):
+
+    #1 Supprimer ME AA
+    AAEvents=(ReadFalseResu['Events'])  
+    for element in AAEvents:
+        if element.type==7 and element.sous_type==1:
+            #print(element)
+            AAEvents.remove(element)
+    print(len(AAEvents))
+
+    #2 Ajouter ME deeplearning
+    i=0
+    for microEveil in listeMEDeepSleep:
+        newEv = Event()
+        newEv.type = 7
+        newEv.sous_type = 1
+        newEv.sous_type2 = 0
+        newEv.debut.temps=listeMEDeepSleep[i][0]
+        newEv.debut.ecg=37
+        
+        newEv.reprise.temps=listeMEDeepSleep[i][1]
+        newEv.reprise.sao2=37
+        newEv.reprise.ecg=37
+
+        newEv.minsao2.temps=listeMEDeepSleep[i][1]
+        newEv.minsao2.sao2=37
+        newEv.minsao2.ecg=37
+
+        newEv.fin.temps=listeMEDeepSleep[i][1]
+        newEv.fin.ecg=37
+        newEv.fin.sao2=37
+
+        print(newEv)
+        AAEvents.append(newEv)
+        i=i+1
+
+    print(len(AAEvents))
+
+    return AAEvents
 
 def saveResu(resu, resuName):
     Mot = []
