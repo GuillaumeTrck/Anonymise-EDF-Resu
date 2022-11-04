@@ -145,6 +145,7 @@ def StagesAnalysis(resu,raw,header):
 
 def ArousalAnalysis(resu,raw,header):
         print(header['labels'])
+        print(resu['Events'])
         #Uniform
         
 
@@ -165,11 +166,11 @@ def ArousalAnalysis(resu,raw,header):
         print(info['ch_names'])
         new_raw=raw.get_data()
         print("info raw" +str(new_raw.shape))
-        #a = uniformEDF(new_raw) 
+        #uniform = uniformEDF(new_raw) 
         #print(a.shape)
 
         #Predict
-        #b= predictEDF(a,args.edf,new_raw)
+        #b= predictEDF(uniform,args.edf,new_raw)
 
         
         #comparaison
@@ -186,26 +187,34 @@ def ArousalAnalysis(resu,raw,header):
         plt.show()
 
 
-        #TRUERESU
+        #Trouver les vraies micro-éveils
         recordsNumber=(header['recordsNumber'])
         recordDuration=(header['recordDuration'])
         Events=(resu['Events'])
         eventSeven=filter(lambda event : event.type ==7, Events)
         TrueMicroEveil=filter(lambda event : event.sous_type == 1, eventSeven)
-
-
+        
 
         abcd=F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil)
         matricescoreuse=abcd[1]
         matriceAA=abcd[2]
+        ReadFalseResu=abcd[3]
+        ResuAAName=abcd[4]
+        print(matriceAA.shape)
+        print(matriceAA)
         
         # bbbb=F1ScoreBetweenResuAndDeepsleep(matricescoreuse,prediction)
         # print(bbbb)
+        matriceDeepSleep=predictionToVecWithThreshold(prediction)
 
-        New_matriceAA=assambleArousals(matriceAA)
-        New_matriceAA=selectGoodArousals(matriceAA)
+
+        New_matriceDeepSleep=assambleArousals(matriceDeepSleep)
+        New_matriceDeepSleep=selectGoodArousals(New_matriceDeepSleep)
         
-        #dddd=assambleArousals(matriceDeepLearning)
+        listeMEDeepSleep=New_matriceDeepSleep[1]
+        print(listeMEDeepSleep)
+        delMEAA=transposeVecToResu(ReadFalseResu,listeMEDeepSleep)   #delete ME AA and add ME Deepsleep
+        saveNewMEDeepSleep=saveResu(ReadFalseResu,ResuAAName)
         
         
         
@@ -253,7 +262,7 @@ def F1ScoreBetweenResuAndAA(recordsNumber,recordDuration,TrueMicroEveil):
 
     plt.plot(matriceAA)
     plt.show()
-    return comparaison,matricescoreuse,matriceAA
+    return comparaison,matricescoreuse,matriceAA,ReadFalseResu,FalseResu
 
 def F1ScoreBetweenResuAndDeepsleep(matricescoreuse,prediction):
     label=matricescoreuse
@@ -272,6 +281,30 @@ def F1ScoreBetweenResuAndDeepsleep(matricescoreuse,prediction):
     plt.xlabel('False Positive Rate')
     plt.show()
     return f1_score
+
+def predictionToVecWithThreshold(prediction):
+
+    print("predictionnnnnnn"+str(prediction))
+    prediction[prediction<0.001]=0
+    prediction[prediction>0.001]=1
+    prediction=prediction.astype(int)
+    # i=0
+    # for points in prediction:
+    #     if points<0.001:
+    #         prediction[i]=0
+    #         i+1
+    #     elif points>0.001:
+    #         prediction[i]=1
+    #         i+1
+    print("predictionnnnnnn"+str(prediction))
+    # vec = open('Test.vec','w')
+    # for item in prediction:
+    #     vec.write('%d' % item)
+    #     vec.write('\n')
+    # vec.close()    
+    return prediction
+
+
 
 args = parseArguments()
 initPaths(__file__)
